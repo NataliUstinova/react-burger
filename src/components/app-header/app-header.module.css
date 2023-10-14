@@ -1,0 +1,19 @@
+.container {
+  background: var(--background);
+  display: flex;
+  width: calc(100% - 80px);
+  height: 88px;
+  justify-content: center;
+  align-items: center;
+}
+
+.navList {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 1240px;
+}
+.navListContainer {
+  display: flex;
+  align-items: center;
+}

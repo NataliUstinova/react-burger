@@ -3,7 +3,7 @@ import styles from './burger-ingredients.module.css';
 
 const BurgerIngredients = () => (
   <section className={styles.container}>
-  </div>
+  </section>
 );
 
 export default BurgerIngredients;
