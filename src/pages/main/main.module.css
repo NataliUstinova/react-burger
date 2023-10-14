@@ -6,3 +6,11 @@
   align-items: center;
   justify-content: start;
 }
+
+.blocks {
+  display: flex;
+  flex-direction: row;
+  gap: 40px;
+  width: 1240px;
+  height: 80%;
+}

@@ -8,7 +8,7 @@ const Main = () => {
   return (
     <div className={mainStyles.container}>
     <AppHeader />
-    <main>
+    <main className={mainStyles.blocks}>
       <BurgerIngredients />
       <BurgerConstructor />
     </main>

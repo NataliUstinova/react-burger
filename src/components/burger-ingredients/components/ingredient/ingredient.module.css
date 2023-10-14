@@ -1,0 +1,21 @@
+.ingredientBlock {
+  width: 100%;
+  max-width: 272px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: end;
+  position: relative;
+  padding: 0;
+  cursor: pointer;
+}
+
+.image {
+  width: 240px;
+  height: 120px;
+}
+
+.name {
+  text-align: center;
+  max-width: 272px;
+}
