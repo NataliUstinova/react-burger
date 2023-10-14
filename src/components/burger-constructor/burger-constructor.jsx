@@ -10,7 +10,7 @@ const BurgerConstructor = ({ data }) => {
 
   return (
     <section className={`${burgerConstructor.container} mt-15`}>
-      <div className={`mr-4 ${burgerConstructor.ingredientRow}`}>
+      <div className={`mr-4 ${burgerConstructor.ingredientRow} ${burgerConstructor.ingredientRow_disabled}`}>
         <ConstructorElement
           type='top'
           isLocked={true}
@@ -35,7 +35,7 @@ const BurgerConstructor = ({ data }) => {
         ))}
       </ul>
 
-      <div className={`mr-4 ${burgerConstructor.ingredientRow}`}>
+      <div className={`mr-4 ${burgerConstructor.ingredientRow} ${burgerConstructor.ingredientRow_disabled}`}>
         <ConstructorElement
           type='bottom'
           isLocked={true}

@@ -43,6 +43,11 @@
   cursor: pointer;
 }
 
+.ingredientRow_disabled {
+  cursor: default;
+  pointer-events: none;
+}
+
 .btnContainer {
   display: flex;
   flex-direction: row;

@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import styles from './burger-ingredients.module.css';
+import burgerIngredientsStyles from './burger-ingredients.module.css';
 import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
 import {ingredientPropTypes} from "../../utils/data";
 import IngredientsRowBlock from "./components/ingredient-row-block/ingredient-row-block";
@@ -34,9 +34,9 @@ const BurgerIngredients = ({ data }) => {
   };
 
   return (
-    <section className={styles.container}>
+    <section className={burgerIngredientsStyles.container}>
       <h1 className="text text_color_primary text_type_main-large pb-5">Соберите бургер</h1>
-      <div className={styles.tabs}>
+      <div className={burgerIngredientsStyles.tabs}>
         {TABS.map((tab, index) => <Tab
           key={index}
           value={tab}
@@ -45,7 +45,7 @@ const BurgerIngredients = ({ data }) => {
           children={tab}
         />)}
       </div>
-      <section className={styles.ingredientContainer}>
+      <section className={burgerIngredientsStyles.ingredientContainer}>
         <IngredientsRowBlock title={TABS[0]} ingredients={buns} ref={bunsRef} />
         <IngredientsRowBlock title={TABS[1]} ingredients={sauces} ref={saucesRef} />
         <IngredientsRowBlock title={TABS[2]} ingredients={mains} ref={mainsRef} />

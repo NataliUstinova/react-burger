@@ -1,10 +1,10 @@
 import React from 'react';
-import profile from "./profile.module.css";
+import profileStyles from "./profile.module.css";
 import AppHeader from "../../components/app-header/app-header";
 
 const Profile = () => {
   return (
-    <div className={profile.container}>
+    <div className={profileStyles.container}>
       <AppHeader />
       <main>
       </main>

@@ -10,7 +10,7 @@ const NavigationLink = ({ to, title, children }) => {
   
   const cloneChildWithProps = (isActive, children) => {
     return React.cloneElement(children, { 
-      type: (isActive || isGroupHovered) && !(isActive && isGroupHovered) ? "primary" : "secondary"
+      type: isActive || isGroupHovered ? "primary" : "secondary",
     });
   };
   
@@ -26,7 +26,6 @@ const NavigationLink = ({ to, title, children }) => {
           {cloneChildWithProps(isActive, children)}
           <p className={`pl-2 text text_type_main-default 
           ${isActive || isGroupHovered ? "text_color_primary" : "text_color_inactive"}
-          ${isActive && isGroupHovered ?  "text_color_inactive" : "text_color_primary"}
           `}>
             {title}
           </p>

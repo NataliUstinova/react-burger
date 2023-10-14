@@ -1,13 +1,13 @@
 import React from 'react';
-import styles from './app-header.module.css';
+import appHeaderStyles from './app-header.module.css';
 import { BurgerIcon, ListIcon, Logo, ProfileIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 import NavigationLink from "./components/nav-link/nav-link";
 
 const AppHeader = () => {
   return (
-    <header className={`${styles.container} m-10`}>
-      <nav className={styles.navList}>
-        <div className={styles.navListContainer}>
+    <header className={`${appHeaderStyles.container} m-10`}>
+      <nav className={appHeaderStyles.navList}>
+        <div className={appHeaderStyles.navListContainer}>
           <NavigationLink 
             to="/" 
             title="Конструктор" 
