@@ -1,7 +1,51 @@
 .container {
   max-width: 600px;
+  width: 100%;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: end;
   justify-content: start;
+  height: auto;
+}
+
+.ingredientContainer {
+  gap: 16px;
+  list-style-type: none;
+  width: 100%;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  padding: 16px 0;
+  margin: 0;
+  height: 42%;
+  overflow-y: scroll;
+}
+
+.ingredientContainer::-webkit-scrollbar {
+  width: 8px;
+}
+
+.ingredientContainer::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 10px #2F2F37;
+}
+
+.ingredientContainer::-webkit-scrollbar-thumb {
+  background-color: var(--text-inactive-color);
+}
+
+.ingredientRow {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: end;
+  gap: 8px;
+  padding: 0;
+  cursor: pointer;
+}
+
+.btnContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0;
 }
