@@ -1,15 +1,16 @@
-import React, {useRef, useState} from 'react';
+import React, { useRef, useState } from 'react';
 import styles from './burger-ingredients.module.css';
-import {Tab} from "@ya.praktikum/react-developer-burger-ui-components";
-import {mockData} from "../../utils/data";
+import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
+import {ingredientPropTypes} from "../../utils/data";
 import IngredientsRowBlock from "./components/ingredient-row-block/ingredient-row-block";
+import PropTypes from "prop-types";
 
-const BurgerIngredients = () => {
+const BurgerIngredients = ({ data }) => {
   const TABS = ['Булки', 'Соусы', 'Начинки']
   const [currentTab, setCurrentTab] = useState(TABS[0])
-  const buns = mockData.filter(item => item.type === 'bun')
-  const sauces = mockData.filter(item => item.type === 'sauce')
-  const mains = mockData.filter(item => item.type === 'main')
+  const buns = data.filter(item => item.type === 'bun')
+  const sauces = data.filter(item => item.type === 'sauce')
+  const mains = data.filter(item => item.type === 'main')
 
   const bunsRef = useRef(null);
   const saucesRef = useRef(null);
@@ -31,26 +32,30 @@ const BurgerIngredients = () => {
         break;
     }
   };
-  
+
   return (
-  <section className={styles.container}>
-    <h1 className="text text_color_primary text_type_main-large pb-5">Соберите бургер</h1>
-    <div className={styles.tabs}>
-      {TABS.map((tab, index) => <Tab
-                                            key={index}
-                                            value={tab}
-                                            active={currentTab === tab}
-                                            onClick={() => handleTabClick(tab)}
-                                            children={tab}
-                                        />)}
-    </div>
-    <section className={styles.ingredientContainer}>
-      <IngredientsRowBlock title={TABS[0]} ingredients={buns} ref={bunsRef} />
-      <IngredientsRowBlock title={TABS[1]} ingredients={sauces} ref={saucesRef} />
-      <IngredientsRowBlock title={TABS[2]} ingredients={mains} ref={mainsRef} />
+    <section className={styles.container}>
+      <h1 className="text text_color_primary text_type_main-large pb-5">Соберите бургер</h1>
+      <div className={styles.tabs}>
+        {TABS.map((tab, index) => <Tab
+          key={index}
+          value={tab}
+          active={currentTab === tab}
+          onClick={() => handleTabClick(tab)}
+          children={tab}
+        />)}
+      </div>
+      <section className={styles.ingredientContainer}>
+        <IngredientsRowBlock title={TABS[0]} ingredients={buns} ref={bunsRef} />
+        <IngredientsRowBlock title={TABS[1]} ingredients={sauces} ref={saucesRef} />
+        <IngredientsRowBlock title={TABS[2]} ingredients={mains} ref={mainsRef} />
+      </section>
     </section>
-  </section>
   )
+};
+
+BurgerIngredients.propTypes = {
+  data: PropTypes.arrayOf(PropTypes.shape(ingredientPropTypes)).isRequired
 };
 
 export default BurgerIngredients;
