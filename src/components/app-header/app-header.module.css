@@ -2,7 +2,7 @@
   background: var(--background);
   display: flex;
   width: calc(100% - 80px);
-  height: 88px;
+  min-height: 88px;
   justify-content: center;
   align-items: center;
 }

@@ -1,19 +1,20 @@
-import React, {useState} from 'react';
+import React, { useState } from "react";
 import navLinkStyles from "./nav-link.module.css";
-import {NavLink} from "react-router-dom";
+import { NavLink } from "react-router-dom";
+import PropTypes from "prop-types";
 
 const NavigationLink = ({ to, title, children }) => {
   const [isGroupHovered, setIsGroupHovered] = useState(false);
   const handleGroupMouseEvent = () => {
     setIsGroupHovered(!isGroupHovered);
   };
-  
+
   const cloneChildWithProps = (isActive, children) => {
-    return React.cloneElement(children, { 
+    return React.cloneElement(children, {
       type: isActive || isGroupHovered ? "primary" : "secondary",
     });
   };
-  
+
   return (
     <NavLink
       to={to}
@@ -24,15 +25,27 @@ const NavigationLink = ({ to, title, children }) => {
       {({ isActive }) => (
         <>
           {cloneChildWithProps(isActive, children)}
-          <p className={`pl-2 text text_type_main-default 
-          ${isActive || isGroupHovered ? "text_color_primary" : "text_color_inactive"}
-          `}>
+          <p
+            className={`pl-2 text text_type_main-default 
+          ${
+            isActive || isGroupHovered
+              ? "text_color_primary"
+              : "text_color_inactive"
+          }
+          `}
+          >
             {title}
           </p>
         </>
       )}
     </NavLink>
   );
+};
+
+NavigationLink.propTypes = {
+  to: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired,
+  children: PropTypes.element.isRequired,
 };
 
 export default NavigationLink;

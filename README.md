@@ -1,13 +1,16 @@
 # React Burger Project
+
 ## Выполненные задачи
 
 ## Спринт 1 / Часть 1
+
 выполнена верстка следующих компонентов:
+
 - [x] `AppHeader` — шапка приложения.
 - [x] `BurgerIngredients` — список ингредиентов.
 - [x] `BurgerConstructor` — текущий состав бургера.
 
-----------------------------
+---
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 

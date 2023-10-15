@@ -5,7 +5,7 @@
   flex-direction: column;
   align-items: end;
   justify-content: start;
-  height: auto;
+  height: 120%;
 }
 
 .ingredientContainer {
@@ -26,7 +26,7 @@
 }
 
 .ingredientContainer::-webkit-scrollbar-track {
-  box-shadow: inset 0 0 10px #2F2F37;
+  box-shadow: inset 0 0 10px #2f2f37;
 }
 
 .ingredientContainer::-webkit-scrollbar-thumb {

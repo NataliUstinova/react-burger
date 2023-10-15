@@ -1,6 +1,5 @@
 .container {
-  height: 100dvh;
-  background-color: var(--background-alt);
+  height: calc(100% - 210px);
   display: flex;
   flex-direction: column;
   align-items: center;
