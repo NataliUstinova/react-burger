@@ -11,7 +11,6 @@ import {
 
 const BurgerConstructor = ({ data, toggleModal }) => {
   const [firstIngredient, ...middleIngredients] = data;
-  const lastIngredient = middleIngredients.pop();
   const order = { number: 568234 };
   return (
     <section className={`${burgerConstructor.container} mt-15`}>
@@ -48,9 +47,9 @@ const BurgerConstructor = ({ data, toggleModal }) => {
         <ConstructorElement
           type="bottom"
           isLocked={true}
-          text={`${lastIngredient.name} (низ)`}
-          price={lastIngredient.price}
-          thumbnail={lastIngredient.image}
+          text={`${firstIngredient.name} (низ)`}
+          price={firstIngredient.price}
+          thumbnail={firstIngredient.image}
         />
       </div>
 

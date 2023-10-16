@@ -1,14 +1,14 @@
 import React from "react";
-import modalOderStyles from "./modal-order.module.css";
+import orderDetailsStyles from "./order-details.module.css";
 import { Done } from "../../images";
 import PropTypes from "prop-types";
 import { orderPropTypes } from "../../utils/data";
 
-const ModalOrder = ({ order }) => {
+const OrderDetails = ({ order }) => {
   return (
     <>
       <h2
-        className={`text text_color_primary text_type_digits-large pt-15 ${modalOderStyles.textGlow}`}
+        className={`text text_color_primary text_type_digits-large pt-15 ${orderDetailsStyles.textGlow}`}
       >
         {order.number}
       </h2>
@@ -18,7 +18,7 @@ const ModalOrder = ({ order }) => {
       <img
         src={Done}
         alt="checkmark"
-        className={`${modalOderStyles.checkmark} pt-15 pb-15`}
+        className={`${orderDetailsStyles.checkmark} pt-15 pb-15`}
       />
       <p className="text text_color_primary text_type_main-default pb-2">
         Ваш заказ начали готовить
@@ -30,7 +30,7 @@ const ModalOrder = ({ order }) => {
   );
 };
 
-ModalOrder.propTypes = {
+OrderDetails.propTypes = {
   order: PropTypes.shape(orderPropTypes),
 };
-export default ModalOrder;
+export default OrderDetails;

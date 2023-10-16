@@ -4,8 +4,8 @@ import { createPortal } from "react-dom";
 import ModalOverlay from "../modal-overlay/modal-overlay";
 import PropTypes from "prop-types";
 import { CloseIcon } from "@ya.praktikum/react-developer-burger-ui-components";
-import ModalOrder from "../modal-order/modal-order";
-import ModalIngredient from "../modal-ingredient/modal-ingredient";
+import OrderDetails from "../order-details/order-details";
+import IngredientDetails from "../ingredient-details/ingredient-details";
 import { ingredientPropTypes, orderPropTypes } from "../../utils/data";
 
 const Modal = ({ isOpen, onClose, data }) => {
@@ -30,8 +30,8 @@ const Modal = ({ isOpen, onClose, data }) => {
             <CloseIcon type="primary" onClick={onClose} />
           </div>
         </div>
-        {data.name && <ModalIngredient ingredient={data} />}
-        {data.number && <ModalOrder order={data} />}
+        {data.name && <IngredientDetails ingredient={data} />}
+        {data.number && <OrderDetails order={data} />}
       </div>
     </ModalOverlay>,
     document.body
