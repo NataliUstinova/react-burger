@@ -4,12 +4,16 @@
 
 ## Спринт 1 / Часть 1
 
-выполнена верстка следующих компонентов:
-
 - [x] `AppHeader` — шапка приложения.
 - [x] `BurgerIngredients` — список ингредиентов.
 - [x] `BurgerConstructor` — текущий состав бургера.
+- [x] `Modal` — компонент модального окна.
 
+## Спринт 1 / Часть 2
+- [x] `api` для работы с данными ингридиентов.
+- [x] `ModalOverlay` — оверлей модального окна.
+- [x] `OrderDetails` — модальное окно с деталями заказа.
+- [x] `IngredientDetails` — модальное окно с деталями ингрeдиента.
 ---
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
