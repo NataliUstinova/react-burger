@@ -16,6 +16,7 @@ const OrderDetails = ({ order }) => {
         идентификатор заказа
       </p>
       <img
+        loading="lazy"
         src={Done}
         alt="checkmark"
         className={`${orderDetailsStyles.checkmark} pt-15 pb-15`}
@@ -31,6 +32,6 @@ const OrderDetails = ({ order }) => {
 };
 
 OrderDetails.propTypes = {
-  order: PropTypes.shape(orderPropTypes),
+  order: PropTypes.shape(orderPropTypes).isRequired,
 };
 export default OrderDetails;

@@ -5,8 +5,9 @@ import * as propTypes from "prop-types";
 const IngredientDetails = ({ ingredient }) => {
   const { image, name, carbohydrates, fat, proteins, calories } = ingredient;
   return (
-    <div>
+    <div className={ingredientDetailsStyles.container}>
       <img
+        loading="lazy"
         src={image}
         alt="ingredient"
         className={ingredientDetailsStyles.image}

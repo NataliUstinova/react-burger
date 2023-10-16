@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import mainStyles from "./main.module.css";
 import BurgerIngredients from "../../components/burger-ingredients/burger-ingredients";
 import BurgerConstructor from "../../components/burger-constructor/burger-constructor";
@@ -8,14 +8,14 @@ import PropTypes, { shape } from "prop-types";
 const Main = ({ data, isLoading, toggleModal }) => {
   return (
     <div className={mainStyles.container}>
-      {!isLoading && data[0] ? (
-        <main className={mainStyles.blocks}>
-          <BurgerIngredients toggleModal={toggleModal} data={data} />
-          <BurgerConstructor toggleModal={toggleModal} data={data} />
-        </main>
-      ) : (
-        <p>Загрузка...</p>
-      )}
+      <Suspense fallback={<div>Loading...</div>}>
+        {data[0] && (
+          <main className={mainStyles.blocks}>
+            <BurgerIngredients toggleModal={toggleModal} data={data} />
+            <BurgerConstructor toggleModal={toggleModal} data={data} />
+          </main>
+        )}
+      </Suspense>
     </div>
   );
 };

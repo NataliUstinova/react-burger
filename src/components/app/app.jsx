@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { lazy, Suspense, useEffect, useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import appStyles from "./app.module.css";
 import Main from "../../pages/main/main";
@@ -7,6 +7,10 @@ import Profile from "../../pages/profile/profile";
 import AppHeader from "../app-header/app-header";
 import { api } from "../../utils/api";
 import Modal from "../modal/modal";
+const IngredientDetails = lazy(() =>
+  import("../ingredient-details/ingredient-details")
+);
+const OrderDetails = lazy(() => import("../order-details/order-details"));
 
 function App() {
   const [ingredients, setIngredients] = useState([]);
@@ -42,7 +46,22 @@ function App() {
   return (
     <div className={appStyles.container}>
       <AppHeader />
-      <Modal isOpen={isModalOpen} onClose={toggleModal} data={modalData} />
+      <Suspense fallback={null}>
+        {modalData && (
+          <Modal
+            isOpen={isModalOpen}
+            onClose={toggleModal}
+            data={modalData}
+            children={
+              modalData.name ? (
+                <IngredientDetails ingredient={modalData} />
+              ) : (
+                <OrderDetails order={modalData} />
+              )
+            }
+          />
+        )}
+      </Suspense>
       <Routes>
         <Route
           path="/"
