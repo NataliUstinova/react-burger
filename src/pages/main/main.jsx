@@ -3,15 +3,15 @@ import mainStyles from "./main.module.css";
 import BurgerIngredients from "../../components/burger-ingredients/burger-ingredients";
 import BurgerConstructor from "../../components/burger-constructor/burger-constructor";
 import { ingredientPropTypes } from "../../utils/data";
-import PropTypes from "prop-types";
+import PropTypes, { shape } from "prop-types";
 
-const Main = ({ data, isLoading }) => {
+const Main = ({ data, isLoading, toggleModal }) => {
   return (
     <div className={mainStyles.container}>
       {!isLoading && data[0] ? (
         <main className={mainStyles.blocks}>
-          <BurgerIngredients data={data} />
-          <BurgerConstructor data={data} />
+          <BurgerIngredients toggleModal={toggleModal} data={data} />
+          <BurgerConstructor toggleModal={toggleModal} data={data} />
         </main>
       ) : (
         <p>Загрузка...</p>
@@ -21,8 +21,9 @@ const Main = ({ data, isLoading }) => {
 };
 
 Main.propTypes = {
-  data: PropTypes.arrayOf(ingredientPropTypes).isRequired,
+  data: PropTypes.arrayOf(shape(ingredientPropTypes)).isRequired,
   isLoading: PropTypes.bool.isRequired,
+  toggleModal: PropTypes.func.isRequired,
 };
 
 export default Main;

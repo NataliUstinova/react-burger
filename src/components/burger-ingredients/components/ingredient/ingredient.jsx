@@ -7,11 +7,12 @@ import {
 import PropTypes from "prop-types";
 import { ingredientPropTypes } from "../../../../utils/data";
 
-const Ingredient = ({ ingredient }) => {
+const Ingredient = ({ ingredient, toggleModal }) => {
   const { image, name, price } = ingredient;
   const [counter, setCounter] = useState(0);
   function handleCounterClick() {
     setCounter((prev) => prev + 1);
+    toggleModal(ingredient);
   }
   return (
     <li
@@ -43,6 +44,7 @@ const Ingredient = ({ ingredient }) => {
 
 Ingredient.propTypes = {
   ingredient: PropTypes.shape(ingredientPropTypes).isRequired,
+  toggleModal: PropTypes.func.isRequired,
 };
 
 export default Ingredient;

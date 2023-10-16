@@ -14,3 +14,7 @@ export const ingredientPropTypes = {
   image_large: PropTypes.string,
   __v: PropTypes.number.isRequired,
 };
+
+export const orderPropTypes = {
+  number: PropTypes.number.isRequired,
+};
