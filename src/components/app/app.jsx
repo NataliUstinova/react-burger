@@ -44,7 +44,6 @@ function App() {
             isOpen={isModalOpen}
             onOpen={openModal}
             onClose={closeModal}
-            data={modalData}
             children={
               modalData.name ? (
                 <IngredientDetails ingredient={modalData} />
