@@ -28,9 +28,7 @@ function App() {
           setIngredients(res.data);
         }
       })
-      .catch((error) => {
-        console.log(error);
-      })
+      .catch(console.error)
       .finally(() => {
         setIsLoading(false);
       });
