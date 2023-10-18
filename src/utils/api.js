@@ -1,4 +1,5 @@
 const BASE_URL = "https://norma.nomoreparties.space/api";
+
 class Api {
   constructor({ baseUrl, headers }) {
     this._baseUrl = baseUrl;
@@ -10,11 +11,17 @@ class Api {
     return res.ok ? result : Promise.reject(result.message);
   }
 
+  _request(endpoint, options) {
+    return fetch(`${this._baseUrl}${endpoint}`, options).then(
+      this._checkServerResponse
+    );
+  }
+
   fetchIngredients() {
-    return fetch(`${this._baseUrl}/ingredients`, {
+    return this._request("/ingredients", {
       method: "GET",
       headers: this._headers,
-    }).then(this._checkServerResponse);
+    });
   }
 }
 
