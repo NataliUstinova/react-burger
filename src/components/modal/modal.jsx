@@ -4,20 +4,21 @@ import { createPortal } from "react-dom";
 import ModalOverlay from "../modal-overlay/modal-overlay";
 import PropTypes from "prop-types";
 import { CloseIcon } from "@ya.praktikum/react-developer-burger-ui-components";
-import { ingredientPropTypes, orderPropTypes } from "../../utils/data";
 
 const Modal = ({ isOpen, onClose, data, children }) => {
-  const handleEsc = (event) => {
-    if (event.keyCode === 27) {
-      onClose();
-    }
-  };
   useEffect(() => {
-    document.addEventListener("keydown", handleEsc);
-    return () => {
-      document.removeEventListener("keydown", handleEsc);
-    };
-  });
+    function closeByEscape(evt) {
+      if (evt.key === "Escape") {
+        onClose();
+      }
+    }
+    if (isOpen) {
+      document.addEventListener("keydown", closeByEscape);
+      return () => {
+        document.removeEventListener("keydown", closeByEscape);
+      };
+    }
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -33,7 +34,7 @@ const Modal = ({ isOpen, onClose, data, children }) => {
         >
           {data?.name && (
             <h2 className="text text_color_primary text_type_main-large">
-              Детали ингредиента
+              {data.title}
             </h2>
           )}
           <div className={modalStyles.closeButton}>
@@ -43,18 +44,13 @@ const Modal = ({ isOpen, onClose, data, children }) => {
         {children}
       </div>
     </ModalOverlay>,
-    document.body
+    document.getElementById("modals")
   );
 };
 
 Modal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
-  data: PropTypes.oneOfType([
-    PropTypes.shape(ingredientPropTypes),
-    PropTypes.shape(orderPropTypes),
-    PropTypes.object,
-  ]),
   children: PropTypes.node,
 };
 

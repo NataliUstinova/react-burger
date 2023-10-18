@@ -5,7 +5,7 @@ import { ingredientPropTypes } from "../../utils/data";
 import IngredientsRowBlock from "./components/ingredient-row-block/ingredient-row-block";
 import PropTypes from "prop-types";
 
-const BurgerIngredients = ({ data, toggleModal }) => {
+const BurgerIngredients = ({ data, openModal }) => {
   const TABS = ["Булки", "Соусы", "Начинки"];
   const [currentTab, setCurrentTab] = useState(TABS[0]);
   const buns = data.filter((item) => item.type === "bun");
@@ -51,19 +51,19 @@ const BurgerIngredients = ({ data, toggleModal }) => {
       </div>
       <section className={burgerIngredientsStyles.ingredientContainer}>
         <IngredientsRowBlock
-          toggleModal={toggleModal}
+          openModal={openModal}
           title={TABS[0]}
           ingredients={buns}
           ref={bunsRef}
         />
         <IngredientsRowBlock
-          toggleModal={toggleModal}
+          openModal={openModal}
           title={TABS[1]}
           ingredients={sauces}
           ref={saucesRef}
         />
         <IngredientsRowBlock
-          toggleModal={toggleModal}
+          openModal={openModal}
           title={TABS[2]}
           ingredients={mains}
           ref={mainsRef}
@@ -75,7 +75,7 @@ const BurgerIngredients = ({ data, toggleModal }) => {
 
 BurgerIngredients.propTypes = {
   data: PropTypes.arrayOf(PropTypes.shape(ingredientPropTypes)).isRequired,
-  toggleModal: PropTypes.func.isRequired,
+  openModal: PropTypes.func.isRequired,
 };
 
 export default BurgerIngredients;

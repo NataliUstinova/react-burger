@@ -7,6 +7,7 @@ import Profile from "../../pages/profile/profile";
 import AppHeader from "../app-header/app-header";
 import { api } from "../../utils/api";
 import Modal from "../modal/modal";
+import { useModal } from "../../hooks/useModal";
 const IngredientDetails = lazy(() =>
   import("../ingredient-details/ingredient-details")
 );
@@ -16,15 +17,7 @@ function App() {
   const [ingredients, setIngredients] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalData, setModalData] = useState({});
-
-  const toggleModal = (data) => {
-    setIsModalOpen(!isModalOpen);
-    if (data) {
-      setModalData(data);
-    }
-  };
+  const { isModalOpen, modalData, openModal, closeModal } = useModal();
 
   useEffect(() => {
     setIsLoading(true);
@@ -45,12 +38,14 @@ function App() {
 
   return (
     <div className={appStyles.container}>
+      <div id="modals"></div>
       <AppHeader />
       <Suspense fallback={null}>
         {modalData && (
           <Modal
             isOpen={isModalOpen}
-            onClose={toggleModal}
+            onOpen={openModal}
+            onClose={closeModal}
             data={modalData}
             children={
               modalData.name ? (
@@ -69,7 +64,8 @@ function App() {
             <Main
               data={ingredients}
               isLoading={isLoading}
-              toggleModal={toggleModal}
+              openModal={openModal}
+              closeModal={closeModal}
             />
           }
         />

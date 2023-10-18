@@ -9,7 +9,7 @@ import {
   DragIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 
-const BurgerConstructor = ({ data, toggleModal }) => {
+const BurgerConstructor = ({ data, openModal }) => {
   const [firstIngredient, ...middleIngredients] = data;
   const order = { number: 568234 };
   return (
@@ -64,7 +64,7 @@ const BurgerConstructor = ({ data, toggleModal }) => {
           size="large"
           children="Оформить заказ"
           extraClass="ml-10"
-          onClick={() => toggleModal(order)}
+          onClick={() => openModal(order)}
         />
       </div>
     </section>
@@ -73,7 +73,7 @@ const BurgerConstructor = ({ data, toggleModal }) => {
 
 BurgerConstructor.propTypes = {
   data: PropTypes.arrayOf(PropTypes.shape(ingredientPropTypes)).isRequired,
-  toggleModal: PropTypes.func.isRequired,
+  openModal: PropTypes.func.isRequired,
 };
 
 export default BurgerConstructor;

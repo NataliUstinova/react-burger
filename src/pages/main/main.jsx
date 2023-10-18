@@ -5,14 +5,14 @@ import BurgerConstructor from "../../components/burger-constructor/burger-constr
 import { ingredientPropTypes } from "../../utils/data";
 import PropTypes, { shape } from "prop-types";
 
-const Main = ({ data, isLoading, toggleModal }) => {
+const Main = ({ data, closeModal, openModal }) => {
   return (
     <div className={mainStyles.container}>
       <Suspense fallback={<div>Loading...</div>}>
         {data[0] && (
           <main className={mainStyles.blocks}>
-            <BurgerIngredients toggleModal={toggleModal} data={data} />
-            <BurgerConstructor toggleModal={toggleModal} data={data} />
+            <BurgerIngredients openModal={openModal} data={data} />
+            <BurgerConstructor openModal={openModal} data={data} />
           </main>
         )}
       </Suspense>
@@ -23,7 +23,7 @@ const Main = ({ data, isLoading, toggleModal }) => {
 Main.propTypes = {
   data: PropTypes.arrayOf(shape(ingredientPropTypes)).isRequired,
   isLoading: PropTypes.bool.isRequired,
-  toggleModal: PropTypes.func.isRequired,
+  openModal: PropTypes.func.isRequired,
 };
 
 export default Main;

@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 import { ingredientPropTypes } from "../../../../utils/data";
 
 const IngredientsRowBlock = forwardRef(
-  ({ title, ingredients, toggleModal }, ref) => (
+  ({ title, ingredients, openModal }, ref) => (
     <div ref={ref} className={ingredientRowBlockStyles.container}>
       <p
         ref={ref}
@@ -16,7 +16,7 @@ const IngredientsRowBlock = forwardRef(
       <ul className={`${ingredientRowBlockStyles.ingredientsRow} pl-4 pr-4`}>
         {ingredients.map((ingredient) => (
           <Ingredient
-            toggleModal={toggleModal}
+            openModal={openModal}
             ingredient={ingredient}
             key={ingredient._id}
           />
@@ -29,7 +29,7 @@ const IngredientsRowBlock = forwardRef(
 IngredientsRowBlock.propTypes = {
   title: PropTypes.string.isRequired,
   ingredients: PropTypes.arrayOf(PropTypes.shape(ingredientPropTypes)),
-  toggleModal: PropTypes.func.isRequired,
+  openModal: PropTypes.func.isRequired,
 };
 
 export default IngredientsRowBlock;
