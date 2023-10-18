@@ -36,7 +36,6 @@ function App() {
 
   return (
     <div className={appStyles.container}>
-      <div id="modals"></div>
       <AppHeader />
       <Suspense fallback={null}>
         {modalData && (
