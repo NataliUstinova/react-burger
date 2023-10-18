@@ -26,7 +26,7 @@ const Ingredient = ({ ingredient, openModal }) => {
           extraClass="m-1"
         />
       )}
-      <img src={image} alt="" className={ingredientStyles.image} />
+      <img src={image} alt={name} className={ingredientStyles.image} />
       <div style={{ display: "flex" }}>
         <p className="text text_color_primary text_type_digits-default pr-2">
           {price}

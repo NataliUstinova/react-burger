@@ -9,7 +9,7 @@ const IngredientDetails = ({ ingredient }) => {
       <img
         loading="lazy"
         src={image}
-        alt="ingredient"
+        alt={name}
         className={ingredientDetailsStyles.image}
       />
       <p
