@@ -3,6 +3,9 @@
   flex-direction: column;
   align-items: center;
 }
+.title {
+  align-self: flex-start;
+}
 .image {
   width: 480px;
   height: 240px;

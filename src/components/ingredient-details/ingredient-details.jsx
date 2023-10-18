@@ -3,9 +3,15 @@ import ingredientDetailsStyles from "./ingredient-details.module.css";
 import { ingredientPropTypes } from "../../utils/data";
 import * as propTypes from "prop-types";
 const IngredientDetails = ({ ingredient }) => {
-  const { image, name, carbohydrates, fat, proteins, calories } = ingredient;
+  const { image, name, carbohydrates, fat, proteins, calories, title } =
+    ingredient;
   return (
     <div className={ingredientDetailsStyles.container}>
+      <h2
+        className={`text text_color_primary text_type_main-large ${ingredientDetailsStyles.title}`}
+      >
+        {title}
+      </h2>
       <img
         loading="lazy"
         src={image}

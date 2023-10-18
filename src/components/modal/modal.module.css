@@ -6,30 +6,14 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-}
-
-.headerContainerEnd {
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: flex-end;
-}
-
-.headerContainerSb {
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
+  position: relative;
 }
 
 .closeButton {
   cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  justify-content: flex-start;
+  position: absolute;
+  top: 70px;
+  right: 40px;
 }
 
 .closeButton:hover {
