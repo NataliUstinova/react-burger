@@ -7,11 +7,12 @@ import {
 import PropTypes from "prop-types";
 import { ingredientPropTypes } from "../../../../utils/data";
 
-const Ingredient = ({ ingredient }) => {
+const Ingredient = ({ ingredient, openModal }) => {
   const { image, name, price } = ingredient;
   const [counter, setCounter] = useState(0);
   function handleCounterClick() {
     setCounter((prev) => prev + 1);
+    openModal({ ...ingredient, title: "Детали ингредиента" });
   }
   return (
     <li
@@ -25,7 +26,7 @@ const Ingredient = ({ ingredient }) => {
           extraClass="m-1"
         />
       )}
-      <img src={image} alt="" className={ingredientStyles.image} />
+      <img src={image} alt={name} className={ingredientStyles.image} />
       <div style={{ display: "flex" }}>
         <p className="text text_color_primary text_type_digits-default pr-2">
           {price}
@@ -43,6 +44,7 @@ const Ingredient = ({ ingredient }) => {
 
 Ingredient.propTypes = {
   ingredient: PropTypes.shape(ingredientPropTypes).isRequired,
+  openModal: PropTypes.func.isRequired,
 };
 
 export default Ingredient;

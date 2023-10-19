@@ -1,0 +1,21 @@
+.container {
+  background-color: var(--background);
+  height: auto;
+  border-radius: 40px;
+  width: 640px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.closeButton {
+  cursor: pointer;
+  position: absolute;
+  top: 70px;
+  right: 40px;
+}
+
+.closeButton:hover {
+  opacity: 0.6;
+}
