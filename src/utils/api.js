@@ -23,6 +23,14 @@ class Api {
       headers: this._headers,
     });
   }
+
+  postOrder(ingredientsIds) {
+    return this._request("/orders", {
+      method: "POST",
+      headers: this._headers,
+      body: JSON.stringify({ ingredients: ingredientsIds }),
+    });
+  }
 }
 
 export const api = new Api({
