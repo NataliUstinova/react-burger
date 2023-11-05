@@ -65,9 +65,9 @@ const BurgerConstructor = ({ openModal }) => {
             <ConstructorElement
               type={ingredient.type}
               isLocked={false}
-              text={ingredient?.name}
-              price={ingredient?.price}
-              thumbnail={ingredient?.image}
+              text={ingredient.name}
+              price={ingredient.price}
+              thumbnail={ingredient.image}
             />
           </li>
         ))}
