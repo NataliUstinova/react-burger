@@ -1,16 +1,17 @@
-import React from "react";
+import React, { useContext } from "react";
 import burgerConstructor from "./burger-constructor.module.css";
 import PropTypes from "prop-types";
-import { ingredientPropTypes } from "../../utils/data";
 import {
   Button,
   ConstructorElement,
   CurrencyIcon,
   DragIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
+import { IngredientsContext } from "../../context/ingredients-context";
 
-const BurgerConstructor = ({ data, openModal }) => {
-  const [firstIngredient, ...middleIngredients] = data;
+const BurgerConstructor = ({ openModal }) => {
+  const ingredients = useContext(IngredientsContext);
+  const [firstIngredient, ...middleIngredients] = ingredients;
   const order = { number: 568234 };
   return (
     <section className={`${burgerConstructor.container} mt-15`}>
@@ -20,14 +21,14 @@ const BurgerConstructor = ({ data, openModal }) => {
         <ConstructorElement
           type="top"
           isLocked={true}
-          text={`${firstIngredient.name} (верх)`}
-          price={firstIngredient.price}
-          thumbnail={firstIngredient.image}
+          text={`${firstIngredient?.name} (верх)`}
+          price={firstIngredient?.price}
+          thumbnail={firstIngredient?.image}
         />
       </div>
 
       <ul className={burgerConstructor.ingredientContainer}>
-        {middleIngredients.map((ingredient) => (
+        {middleIngredients?.map((ingredient) => (
           <li key={ingredient._id} className={burgerConstructor.ingredientRow}>
             <DragIcon type="primary" />
             <ConstructorElement
@@ -47,9 +48,9 @@ const BurgerConstructor = ({ data, openModal }) => {
         <ConstructorElement
           type="bottom"
           isLocked={true}
-          text={`${firstIngredient.name} (низ)`}
-          price={firstIngredient.price}
-          thumbnail={firstIngredient.image}
+          text={`${firstIngredient?.name} (низ)`}
+          price={firstIngredient?.price}
+          thumbnail={firstIngredient?.image}
         />
       </div>
 
@@ -72,7 +73,6 @@ const BurgerConstructor = ({ data, openModal }) => {
 };
 
 BurgerConstructor.propTypes = {
-  data: PropTypes.arrayOf(PropTypes.shape(ingredientPropTypes)).isRequired,
   openModal: PropTypes.func.isRequired,
 };
 

@@ -8,6 +8,9 @@ import AppHeader from "../app-header/app-header";
 import { api } from "../../utils/api";
 import Modal from "../modal/modal";
 import { useModal } from "../../hooks/useModal";
+import { IngredientsContext } from "../../context/ingredients-context";
+import PropTypes from "prop-types";
+import { ingredientPropTypes } from "../../utils/data";
 const IngredientDetails = lazy(() =>
   import("../ingredient-details/ingredient-details")
 );
@@ -26,6 +29,7 @@ function App() {
       .then((res) => {
         if (res.success) {
           setIngredients(res.data);
+          console.log(res.data);
         }
       })
       .catch(console.error)
@@ -36,40 +40,45 @@ function App() {
 
   return (
     <div className={appStyles.container}>
-      <AppHeader />
-      <Suspense fallback={null}>
-        {modalData && (
-          <Modal
-            isOpen={isModalOpen}
-            onOpen={openModal}
-            onClose={closeModal}
-            children={
-              modalData.name ? (
-                <IngredientDetails ingredient={modalData} />
-              ) : (
-                <OrderDetails order={modalData} />
-              )
+      <IngredientsContext.Provider value={ingredients}>
+        <AppHeader />
+        <Suspense fallback={null}>
+          {modalData && (
+            <Modal
+              isOpen={isModalOpen}
+              onOpen={openModal}
+              onClose={closeModal}
+              children={
+                modalData.name ? (
+                  <IngredientDetails ingredient={modalData} />
+                ) : (
+                  <OrderDetails order={modalData} />
+                )
+              }
+            />
+          )}
+        </Suspense>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <Main
+                isLoading={isLoading}
+                openModal={openModal}
+                closeModal={closeModal}
+              />
             }
           />
-        )}
-      </Suspense>
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <Main
-              data={ingredients}
-              isLoading={isLoading}
-              openModal={openModal}
-              closeModal={closeModal}
-            />
-          }
-        />
-        <Route path="/order-feed" element={<OrderFeed />} />
-        <Route path="/profile" element={<Profile />} />
-      </Routes>
+          <Route path="/order-feed" element={<OrderFeed />} />
+          <Route path="/profile" element={<Profile />} />
+        </Routes>
+      </IngredientsContext.Provider>
     </div>
   );
 }
+
+IngredientsContext.Provider.propTypes = {
+  value: PropTypes.arrayOf(PropTypes.shape(ingredientPropTypes)),
+};
 
 export default App;

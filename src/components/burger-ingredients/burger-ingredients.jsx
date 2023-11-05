@@ -1,16 +1,17 @@
-import React, { useRef, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import burgerIngredientsStyles from "./burger-ingredients.module.css";
 import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
-import { ingredientPropTypes } from "../../utils/data";
 import IngredientsRowBlock from "./components/ingredient-row-block/ingredient-row-block";
 import PropTypes from "prop-types";
+import { IngredientsContext } from "../../context/ingredients-context";
 
-const BurgerIngredients = ({ data, openModal }) => {
+const BurgerIngredients = ({ openModal }) => {
+  const ingredients = useContext(IngredientsContext);
   const TABS = ["Булки", "Соусы", "Начинки"];
   const [currentTab, setCurrentTab] = useState(TABS[0]);
-  const buns = data.filter((item) => item.type === "bun");
-  const sauces = data.filter((item) => item.type === "sauce");
-  const mains = data.filter((item) => item.type === "main");
+  const buns = ingredients?.filter((item) => item.type === "bun");
+  const sauces = ingredients?.filter((item) => item.type === "sauce");
+  const mains = ingredients?.filter((item) => item.type === "main");
 
   const bunsRef = useRef(null);
   const saucesRef = useRef(null);
@@ -74,7 +75,6 @@ const BurgerIngredients = ({ data, openModal }) => {
 };
 
 BurgerIngredients.propTypes = {
-  data: PropTypes.arrayOf(PropTypes.shape(ingredientPropTypes)).isRequired,
   openModal: PropTypes.func.isRequired,
 };
 
