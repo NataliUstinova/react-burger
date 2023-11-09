@@ -10,7 +10,7 @@ const Main = ({ openModal }) => {
       <Suspense fallback={<div>Loading...</div>}>
         <main className={mainStyles.blocks}>
           <BurgerIngredients openModal={openModal} />
-          <BurgerConstructor openModal={openModal} />
+          {/*<BurgerConstructor openModal={openModal} />*/}
         </main>
       </Suspense>
     </div>
@@ -18,7 +18,6 @@ const Main = ({ openModal }) => {
 };
 
 Main.propTypes = {
-  isLoading: PropTypes.bool.isRequired,
   openModal: PropTypes.func.isRequired,
 };
 

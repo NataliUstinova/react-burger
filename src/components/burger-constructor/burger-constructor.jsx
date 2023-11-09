@@ -7,15 +7,23 @@ import {
   CurrencyIcon,
   DragIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import { IngredientsContext } from "../../context/ingredients-context";
 import { api } from "../../utils/api";
+import { useSelector } from "react-redux";
 
 const BurgerConstructor = ({ openModal }) => {
   const [totalPrice, setTotalPrice] = useState(0);
-  const ingredients = useContext(IngredientsContext);
+  const { constructorIngredients, isLoading } = useSelector(
+    (state) => state.ingredients
+  );
 
-  const buns = ingredients.filter((ingredient) => ingredient.type === "bun");
-  const middleIngredients = ingredients.filter(
+  useEffect(() => {
+    console.log(constructorIngredients);
+  }, [constructorIngredients]);
+
+  const buns = constructorIngredients.filter(
+    (ingredient) => ingredient.type === "bun"
+  );
+  const middleIngredients = constructorIngredients.filter(
     (ingredient) => ingredient.type !== "bun"
   );
 
@@ -28,11 +36,13 @@ const BurgerConstructor = ({ openModal }) => {
     });
   }, [middleIngredients, buns]);
 
-  const ingredientIds = [
-    buns[0]?._id,
-    ...middleIngredients.map((ingredient) => ingredient._id),
-  ];
-
+  let ingredientIds = [];
+  if (constructorIngredients.length !== 0) {
+    ingredientIds = [
+      buns[0]?._id,
+      ...middleIngredients?.map((ingredient) => ingredient._id),
+    ];
+  }
   function handleOrder() {
     api
       .postOrder(ingredientIds)

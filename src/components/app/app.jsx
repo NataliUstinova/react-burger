@@ -5,38 +5,23 @@ import Main from "../../pages/main/main";
 import OrderFeed from "../../pages/order-feed/order-feed";
 import Profile from "../../pages/profile/profile";
 import AppHeader from "../app-header/app-header";
-import { api } from "../../utils/api";
 import Modal from "../modal/modal";
 import { useModal } from "../../hooks/useModal";
-import { IngredientsContext } from "../../context/ingredients-context";
-import PropTypes from "prop-types";
-import { ingredientPropTypes } from "../../utils/data";
+import { useDispatch } from "react-redux";
+import { fetchIngredients } from "../../services/slices/ingredients.slice";
 const IngredientDetails = lazy(() =>
   import("../ingredient-details/ingredient-details")
 );
 const OrderDetails = lazy(() => import("../order-details/order-details"));
 
 function App() {
-  const [ingredients, setIngredients] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-
-  const { isModalOpen, modalData, openModal, closeModal } = useModal();
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    setIsLoading(true);
-    api
-      .fetchIngredients()
-      .then((res) => {
-        if (res.success) {
-          setIngredients(res.data);
-          console.log(res.data);
-        }
-      })
-      .catch(console.error)
-      .finally(() => {
-        setIsLoading(false);
-      });
-  }, []);
+    dispatch(fetchIngredients());
+  }, [dispatch]);
+
+  const { isModalOpen, modalData, openModal, closeModal } = useModal();
 
   return (
     <div className={appStyles.container}>
@@ -60,15 +45,7 @@ function App() {
       <Routes>
         <Route
           path="/"
-          element={
-            <IngredientsContext.Provider value={ingredients}>
-              <Main
-                isLoading={isLoading}
-                openModal={openModal}
-                closeModal={closeModal}
-              />
-            </IngredientsContext.Provider>
-          }
+          element={<Main openModal={openModal} closeModal={closeModal} />}
         />
         <Route path="/order-feed" element={<OrderFeed />} />
         <Route path="/profile" element={<Profile />} />
@@ -76,9 +53,5 @@ function App() {
     </div>
   );
 }
-
-IngredientsContext.Provider.propTypes = {
-  value: PropTypes.arrayOf(PropTypes.shape(ingredientPropTypes)),
-};
 
 export default App;

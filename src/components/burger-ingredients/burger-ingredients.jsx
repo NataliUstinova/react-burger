@@ -1,25 +1,26 @@
-import React, { useContext, useMemo, useRef, useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import burgerIngredientsStyles from "./burger-ingredients.module.css";
 import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
 import IngredientsRowBlock from "./components/ingredient-row-block/ingredient-row-block";
 import PropTypes from "prop-types";
-import { IngredientsContext } from "../../context/ingredients-context";
+import { useSelector } from "react-redux";
 
 const BurgerIngredients = ({ openModal }) => {
-  const ingredients = useContext(IngredientsContext);
+  const { ingredients, isLoading } = useSelector((state) => state.ingredients);
+
   const TABS = ["Булки", "Соусы", "Начинки"];
   const [currentTab, setCurrentTab] = useState(TABS[0]);
 
   const buns = useMemo(
-    () => ingredients?.filter((item) => item.type === "bun"),
+    () => ingredients && ingredients?.filter((item) => item.type === "bun"),
     [ingredients]
   );
   const sauces = useMemo(
-    () => ingredients?.filter((item) => item.type === "sauce"),
+    () => ingredients && ingredients?.filter((item) => item.type === "sauce"),
     [ingredients]
   );
   const mains = useMemo(
-    () => ingredients?.filter((item) => item.type === "main"),
+    () => ingredients && ingredients?.filter((item) => item.type === "main"),
     [ingredients]
   );
 
@@ -61,24 +62,28 @@ const BurgerIngredients = ({ openModal }) => {
         ))}
       </div>
       <section className={burgerIngredientsStyles.ingredientContainer}>
-        <IngredientsRowBlock
-          openModal={openModal}
-          title={TABS[0]}
-          ingredients={buns}
-          ref={bunsRef}
-        />
-        <IngredientsRowBlock
-          openModal={openModal}
-          title={TABS[1]}
-          ingredients={sauces}
-          ref={saucesRef}
-        />
-        <IngredientsRowBlock
-          openModal={openModal}
-          title={TABS[2]}
-          ingredients={mains}
-          ref={mainsRef}
-        />
+        {!isLoading && ingredients?.length > 0 && (
+          <>
+            <IngredientsRowBlock
+              openModal={openModal}
+              title={TABS[0]}
+              ingredients={buns}
+              ref={bunsRef}
+            />
+            <IngredientsRowBlock
+              openModal={openModal}
+              title={TABS[1]}
+              ingredients={sauces}
+              ref={saucesRef}
+            />
+            <IngredientsRowBlock
+              openModal={openModal}
+              title={TABS[2]}
+              ingredients={mains}
+              ref={mainsRef}
+            />
+          </>
+        )}
       </section>
     </section>
   );
