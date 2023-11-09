@@ -40,39 +40,39 @@ function App() {
 
   return (
     <div className={appStyles.container}>
-      <IngredientsContext.Provider value={ingredients}>
-        <AppHeader />
-        <Suspense fallback={null}>
-          {modalData && (
-            <Modal
-              isOpen={isModalOpen}
-              onOpen={openModal}
-              onClose={closeModal}
-              children={
-                modalData.name ? (
-                  <IngredientDetails ingredient={modalData} />
-                ) : (
-                  <OrderDetails order={modalData} />
-                )
-              }
-            />
-          )}
-        </Suspense>
-        <Routes>
-          <Route
-            path="/"
-            element={
+      <AppHeader />
+      <Suspense fallback={null}>
+        {modalData && (
+          <Modal
+            isOpen={isModalOpen}
+            onOpen={openModal}
+            onClose={closeModal}
+            children={
+              modalData.name ? (
+                <IngredientDetails ingredient={modalData} />
+              ) : (
+                <OrderDetails order={modalData} />
+              )
+            }
+          />
+        )}
+      </Suspense>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <IngredientsContext.Provider value={ingredients}>
               <Main
                 isLoading={isLoading}
                 openModal={openModal}
                 closeModal={closeModal}
               />
-            }
-          />
-          <Route path="/order-feed" element={<OrderFeed />} />
-          <Route path="/profile" element={<Profile />} />
-        </Routes>
-      </IngredientsContext.Provider>
+            </IngredientsContext.Provider>
+          }
+        />
+        <Route path="/order-feed" element={<OrderFeed />} />
+        <Route path="/profile" element={<Profile />} />
+      </Routes>
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState } from "react";
+import React, { useContext, useMemo, useRef, useState } from "react";
 import burgerIngredientsStyles from "./burger-ingredients.module.css";
 import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
 import IngredientsRowBlock from "./components/ingredient-row-block/ingredient-row-block";
@@ -9,9 +9,19 @@ const BurgerIngredients = ({ openModal }) => {
   const ingredients = useContext(IngredientsContext);
   const TABS = ["Булки", "Соусы", "Начинки"];
   const [currentTab, setCurrentTab] = useState(TABS[0]);
-  const buns = ingredients?.filter((item) => item.type === "bun");
-  const sauces = ingredients?.filter((item) => item.type === "sauce");
-  const mains = ingredients?.filter((item) => item.type === "main");
+
+  const buns = useMemo(
+    () => ingredients?.filter((item) => item.type === "bun"),
+    [ingredients]
+  );
+  const sauces = useMemo(
+    () => ingredients?.filter((item) => item.type === "sauce"),
+    [ingredients]
+  );
+  const mains = useMemo(
+    () => ingredients?.filter((item) => item.type === "main"),
+    [ingredients]
+  );
 
   const bunsRef = useRef(null);
   const saucesRef = useRef(null);
