@@ -14,6 +14,14 @@
 - [x] `ModalOverlay` — оверлей модального окна.
 - [x] `OrderDetails` — модальное окно с деталями заказа.
 - [x] `IngredientDetails` — модальное окно с деталями ингрeдиента.
+
+## Спринт 2 / Часть 1
+
+- [x] Использование `Context` в `BurgerConstructor`
+- [x] Набор ограничений внутри конструктора бургера
+- [x] Подсчёт итоговой стоимости бургера
+- [x] Возможность создавать заказ - При нажатии на кнопку «Оформить заказ» отправлять запрос к API
+- [x] Типизация через `PropTypes`
 ---
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

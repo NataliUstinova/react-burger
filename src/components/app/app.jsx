@@ -8,6 +8,9 @@ import AppHeader from "../app-header/app-header";
 import { api } from "../../utils/api";
 import Modal from "../modal/modal";
 import { useModal } from "../../hooks/useModal";
+import { IngredientsContext } from "../../context/ingredients-context";
+import PropTypes from "prop-types";
+import { ingredientPropTypes } from "../../utils/data";
 const IngredientDetails = lazy(() =>
   import("../ingredient-details/ingredient-details")
 );
@@ -26,6 +29,7 @@ function App() {
       .then((res) => {
         if (res.success) {
           setIngredients(res.data);
+          console.log(res.data);
         }
       })
       .catch(console.error)
@@ -57,12 +61,13 @@ function App() {
         <Route
           path="/"
           element={
-            <Main
-              data={ingredients}
-              isLoading={isLoading}
-              openModal={openModal}
-              closeModal={closeModal}
-            />
+            <IngredientsContext.Provider value={ingredients}>
+              <Main
+                isLoading={isLoading}
+                openModal={openModal}
+                closeModal={closeModal}
+              />
+            </IngredientsContext.Provider>
           }
         />
         <Route path="/order-feed" element={<OrderFeed />} />
@@ -71,5 +76,9 @@ function App() {
     </div>
   );
 }
+
+IngredientsContext.Provider.propTypes = {
+  value: PropTypes.arrayOf(PropTypes.shape(ingredientPropTypes)),
+};
 
 export default App;
