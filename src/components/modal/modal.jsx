@@ -5,12 +5,19 @@ import ModalOverlay from "../modal-overlay/modal-overlay";
 import PropTypes from "prop-types";
 import { CloseIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 import { useDispatch, useSelector } from "react-redux";
-import { closeModal } from "../../services/slices/modal.slice";
+import { closeModal, modalTypes } from "../../services/slices/modal.slice";
+import { resetCurrentIngredient } from "../../services/slices/ingredients.slice";
+import { resetOrder } from "../../services/slices/order.slice";
 
 const Modal = ({ children }) => {
-  const { isOpen } = useSelector((state) => state.modal);
+  const { isOpen, modalType } = useSelector((state) => state.modal);
   const dispatch = useDispatch();
-  const onClose = () => dispatch(closeModal());
+  const onClose = () => {
+    dispatch(closeModal());
+    modalType === modalTypes.INGREDIENT
+      ? dispatch(resetCurrentIngredient())
+      : dispatch(resetOrder());
+  };
   useEffect(() => {
     function closeByEscape(evt) {
       if (evt.key === "Escape") {

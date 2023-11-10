@@ -10,7 +10,7 @@ import { useDrop } from "react-dnd";
 import { v4 as uuid } from "uuid";
 import {
   setConstructorIngredients,
-  resetConstructor,
+  resetConstructorIngredients,
 } from "../../services/slices/ingredients.slice";
 import { postOrder } from "../../services/slices/order.slice";
 import { modalTypes, openModal } from "../../services/slices/modal.slice";
@@ -48,7 +48,7 @@ const BurgerConstructor = () => {
       })
       .catch((error) => console.error("Order post failed:", error))
       .finally(() => {
-        dispatch(resetConstructor());
+        dispatch(resetConstructorIngredients());
       });
   };
 

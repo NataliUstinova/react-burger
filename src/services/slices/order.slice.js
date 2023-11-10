@@ -31,6 +31,10 @@ const orderSlice = createSlice({
     setOrderStatus: (state, action) => {
       state.status = action.payload;
     },
+    resetOrder: (state) => {
+      state.number = 0;
+      state.status = "";
+    },
   },
   extraReducers: {
     [postOrder.pending]: (state) => {
@@ -50,5 +54,6 @@ const orderSlice = createSlice({
   },
 });
 
-export const { setOrderNumber, setOrderStatus } = orderSlice.actions;
+export const { setOrderNumber, setOrderStatus, resetOrder } =
+  orderSlice.actions;
 export default orderSlice.reducer;
