@@ -1,6 +1,5 @@
 import React from "react";
 import burgerConstructor from "./burger-constructor.module.css";
-import PropTypes from "prop-types";
 import {
   Button,
   ConstructorElement,
@@ -15,8 +14,10 @@ import {
   deleteConstructorIngredient,
 } from "../../services/slices/ingredients.slice";
 import { postOrder } from "../../services/slices/order.slice";
+import { openModal } from "../../services/slices/modal.slice";
+import { modalTypes } from "../../utils/data";
 
-const BurgerConstructor = ({ openModal }) => {
+const BurgerConstructor = () => {
   const dispatch = useDispatch();
   const { constructorIngredients, totalPrice } = useSelector(
     (state) => state.ingredients
@@ -50,8 +51,8 @@ const BurgerConstructor = ({ openModal }) => {
 
     dispatch(postOrder(ingredientIds))
       .unwrap()
-      .then((order) => {
-        openModal(order);
+      .then(() => {
+        dispatch(openModal({ modalType: modalTypes.ORDER }));
       })
       .catch((error) => console.error("Order post failed:", error));
   };
@@ -128,10 +129,6 @@ const BurgerConstructor = ({ openModal }) => {
       </div>
     </section>
   );
-};
-
-BurgerConstructor.propTypes = {
-  openModal: PropTypes.func.isRequired,
 };
 
 export default BurgerConstructor;

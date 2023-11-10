@@ -6,32 +6,34 @@ import OrderFeed from "../../pages/order-feed/order-feed";
 import Profile from "../../pages/profile/profile";
 import AppHeader from "../app-header/app-header";
 import Modal from "../modal/modal";
-import { useModal } from "../../hooks/useModal";
+import { useSelector } from "react-redux";
+import { modalTypes } from "../../utils/data";
 const IngredientDetails = lazy(() =>
   import("../ingredient-details/ingredient-details")
 );
 const OrderDetails = lazy(() => import("../order-details/order-details"));
 
 function App() {
-  const { isModalOpen, modalData, openModal, closeModal } = useModal();
+  const { isOpen, modalType } = useSelector((state) => state.modal);
+
   return (
     <div className={appStyles.container}>
       <AppHeader />
       <Suspense fallback={null}>
-        {modalData && (
+        {isOpen && (
           <Modal
-            isOpen={isModalOpen}
-            onOpen={openModal}
-            onClose={closeModal}
-            children={modalData.type ? <IngredientDetails /> : <OrderDetails />}
+            children={
+              modalType === modalTypes.INGREDIENT ? (
+                <IngredientDetails />
+              ) : (
+                <OrderDetails />
+              )
+            }
           />
         )}
       </Suspense>
       <Routes>
-        <Route
-          path="/"
-          element={<Main openModal={openModal} closeModal={closeModal} />}
-        />
+        <Route path="/" element={<Main />} />
         <Route path="/order-feed" element={<OrderFeed />} />
         <Route path="/profile" element={<Profile />} />
       </Routes>

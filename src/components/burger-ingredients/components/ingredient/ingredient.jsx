@@ -5,12 +5,13 @@ import {
   CurrencyIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import PropTypes from "prop-types";
-import { ingredientPropTypes } from "../../../../utils/data";
+import { ingredientPropTypes, modalTypes } from "../../../../utils/data";
 import { useDrag } from "react-dnd";
 import { useDispatch, useSelector } from "react-redux";
 import { setCurrentIngredient } from "../../../../services/slices/ingredients.slice";
+import { openModal } from "../../../../services/slices/modal.slice";
 
-const Ingredient = ({ ingredient, openModal }) => {
+const Ingredient = ({ ingredient }) => {
   const { image, name, price, _id } = ingredient;
   const dispatch = useDispatch();
   const { constructorIngredients } = useSelector((state) => state.ingredients);
@@ -20,7 +21,7 @@ const Ingredient = ({ ingredient, openModal }) => {
 
   function handleClick() {
     dispatch(setCurrentIngredient(ingredient));
-    openModal({ type: "ingredient" });
+    dispatch(openModal({ modalType: modalTypes.INGREDIENT }));
   }
 
   const [{ opacity }, dragRef] = useDrag({
@@ -63,7 +64,6 @@ const Ingredient = ({ ingredient, openModal }) => {
 
 Ingredient.propTypes = {
   ingredient: PropTypes.shape(ingredientPropTypes).isRequired,
-  openModal: PropTypes.func.isRequired,
 };
 
 export default Ingredient;

@@ -4,25 +4,20 @@ import BurgerIngredients from "../../components/burger-ingredients/burger-ingred
 import BurgerConstructor from "../../components/burger-constructor/burger-constructor";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import PropTypes from "prop-types";
 
-const Main = ({ openModal }) => {
+const Main = () => {
   return (
     <div className={mainStyles.container}>
       <Suspense fallback={<div>Loading...</div>}>
         <main className={mainStyles.blocks}>
           <DndProvider backend={HTML5Backend}>
-            <BurgerIngredients openModal={openModal} />
-            <BurgerConstructor openModal={openModal} />
+            <BurgerIngredients />
+            <BurgerConstructor />
           </DndProvider>
         </main>
       </Suspense>
     </div>
   );
-};
-
-Main.propTypes = {
-  openModal: PropTypes.func.isRequired,
 };
 
 export default Main;

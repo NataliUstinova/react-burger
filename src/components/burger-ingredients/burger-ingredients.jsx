@@ -2,12 +2,11 @@ import React, { useEffect, useMemo, useRef } from "react";
 import burgerIngredientsStyles from "./burger-ingredients.module.css";
 import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
 import IngredientsRowBlock from "./components/ingredient-row-block/ingredient-row-block";
-import PropTypes from "prop-types";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchIngredients } from "../../services/slices/ingredients.slice";
 import { setCurrentTab } from "../../services/slices/tabs.slice";
 
-const BurgerIngredients = ({ openModal }) => {
+const BurgerIngredients = () => {
   const dispatch = useDispatch();
   const { currentTab } = useSelector((state) => state.tabs);
   useEffect(() => {
@@ -72,19 +71,16 @@ const BurgerIngredients = ({ openModal }) => {
         {!isLoading && ingredients?.length > 0 && (
           <>
             <IngredientsRowBlock
-              openModal={openModal}
               title={TABS[0]}
               ingredients={buns}
               ref={bunsRef}
             />
             <IngredientsRowBlock
-              openModal={openModal}
               title={TABS[1]}
               ingredients={sauces}
               ref={saucesRef}
             />
             <IngredientsRowBlock
-              openModal={openModal}
               title={TABS[2]}
               ingredients={mains}
               ref={mainsRef}
@@ -94,10 +90,6 @@ const BurgerIngredients = ({ openModal }) => {
       </section>
     </section>
   );
-};
-
-BurgerIngredients.propTypes = {
-  openModal: PropTypes.func.isRequired,
 };
 
 export default BurgerIngredients;

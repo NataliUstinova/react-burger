@@ -18,3 +18,8 @@ export const ingredientPropTypes = {
 export const orderPropTypes = {
   number: PropTypes.number.isRequired,
 };
+
+export const modalTypes = {
+  ORDER: "order",
+  INGREDIENT: "ingredient",
+};
