@@ -7,7 +7,7 @@ import Profile from "../../pages/profile/profile";
 import AppHeader from "../app-header/app-header";
 import Modal from "../modal/modal";
 import { useSelector } from "react-redux";
-import { modalTypes } from "../../utils/data";
+import { modalTypes } from "../../services/slices/modal.slice";
 const IngredientDetails = lazy(() =>
   import("../ingredient-details/ingredient-details")
 );

@@ -5,11 +5,11 @@ import {
   CurrencyIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import PropTypes from "prop-types";
-import { ingredientPropTypes, modalTypes } from "../../../../utils/data";
+import { ingredientPropTypes } from "../../../../utils/data";
 import { useDrag } from "react-dnd";
 import { useDispatch, useSelector } from "react-redux";
 import { setCurrentIngredient } from "../../../../services/slices/ingredients.slice";
-import { openModal } from "../../../../services/slices/modal.slice";
+import { modalTypes, openModal } from "../../../../services/slices/modal.slice";
 
 const Ingredient = ({ ingredient }) => {
   const { image, name, price, _id } = ingredient;

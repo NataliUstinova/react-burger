@@ -1,5 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+export const modalTypes = {
+  ORDER: "order",
+  INGREDIENT: "ingredient",
+};
+
 const initialState = {
   isOpen: false,
   modalType: null,

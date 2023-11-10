@@ -14,8 +14,7 @@ import {
   deleteConstructorIngredient,
 } from "../../services/slices/ingredients.slice";
 import { postOrder } from "../../services/slices/order.slice";
-import { openModal } from "../../services/slices/modal.slice";
-import { modalTypes } from "../../utils/data";
+import { modalTypes, openModal } from "../../services/slices/modal.slice";
 
 const BurgerConstructor = () => {
   const dispatch = useDispatch();
