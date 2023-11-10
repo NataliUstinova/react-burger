@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ingredientStyles from "./ingredient.module.css";
 import {
   Counter,
@@ -7,12 +7,18 @@ import {
 import PropTypes from "prop-types";
 import { ingredientPropTypes } from "../../../../utils/data";
 import { useDrag } from "react-dnd";
+import { useSelector } from "react-redux";
 
 const Ingredient = ({ ingredient, openModal }) => {
-  const { image, name, price } = ingredient;
-  const [counter, setCounter] = useState(0);
-  function handleCounterClick() {
-    setCounter((prev) => prev + 1);
+  const { image, name, price, _id } = ingredient;
+
+  const { constructorIngredients } = useSelector((state) => state.ingredients);
+
+  const counter = constructorIngredients.filter(
+    (item) => item._id === _id
+  ).length;
+
+  function handleClick() {
     openModal({ ...ingredient, title: "Детали ингредиента" });
   }
 
@@ -28,7 +34,7 @@ const Ingredient = ({ ingredient, openModal }) => {
     <li
       ref={dragRef}
       className={ingredientStyles.ingredientBlock}
-      onClick={handleCounterClick}
+      onClick={handleClick}
       style={{ opacity: opacity }}
     >
       {counter !== 0 && (
