@@ -6,6 +6,7 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import PropTypes from "prop-types";
 import { ingredientPropTypes } from "../../../../utils/data";
+import { useDrag } from "react-dnd";
 
 const Ingredient = ({ ingredient, openModal }) => {
   const { image, name, price } = ingredient;
@@ -14,10 +15,21 @@ const Ingredient = ({ ingredient, openModal }) => {
     setCounter((prev) => prev + 1);
     openModal({ ...ingredient, title: "Детали ингредиента" });
   }
+
+  const [{ opacity }, dragRef] = useDrag({
+    type: "ingredient",
+    item: { ...ingredient },
+    collect: (monitor) => ({
+      opacity: monitor.isDragging() ? 0.1 : 1,
+    }),
+  });
+
   return (
     <li
+      ref={dragRef}
       className={ingredientStyles.ingredientBlock}
       onClick={handleCounterClick}
+      style={{ opacity: opacity }}
     >
       {counter !== 0 && (
         <Counter

@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useEffect, useState } from "react";
+import React, { lazy, Suspense } from "react";
 import { Route, Routes } from "react-router-dom";
 import appStyles from "./app.module.css";
 import Main from "../../pages/main/main";
@@ -7,22 +7,13 @@ import Profile from "../../pages/profile/profile";
 import AppHeader from "../app-header/app-header";
 import Modal from "../modal/modal";
 import { useModal } from "../../hooks/useModal";
-import { useDispatch } from "react-redux";
-import { fetchIngredients } from "../../services/slices/ingredients.slice";
 const IngredientDetails = lazy(() =>
   import("../ingredient-details/ingredient-details")
 );
 const OrderDetails = lazy(() => import("../order-details/order-details"));
 
 function App() {
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(fetchIngredients());
-  }, [dispatch]);
-
   const { isModalOpen, modalData, openModal, closeModal } = useModal();
-
   return (
     <div className={appStyles.container}>
       <AppHeader />

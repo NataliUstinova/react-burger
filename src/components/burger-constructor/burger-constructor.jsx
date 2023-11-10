@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import burgerConstructor from "./burger-constructor.module.css";
 import PropTypes from "prop-types";
 import {
@@ -7,94 +7,113 @@ import {
   CurrencyIcon,
   DragIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import { api } from "../../utils/api";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useDrop } from "react-dnd";
+import { v4 as uuid } from "uuid";
+import {
+  setConstructorIngredients,
+  deleteConstructorIngredient,
+} from "../../services/slices/ingredients.slice";
+import { postOrder } from "../../services/slices/order.slice";
 
 const BurgerConstructor = ({ openModal }) => {
-  const [totalPrice, setTotalPrice] = useState(0);
-  const { constructorIngredients, isLoading } = useSelector(
+  const dispatch = useDispatch();
+  const { constructorIngredients, totalPrice } = useSelector(
     (state) => state.ingredients
   );
-
   useEffect(() => {
     console.log(constructorIngredients);
   }, [constructorIngredients]);
 
-  const buns = constructorIngredients.filter(
+  const buns = constructorIngredients?.filter(
     (ingredient) => ingredient.type === "bun"
   );
-  const middleIngredients = constructorIngredients.filter(
+  const middleIngredients = constructorIngredients?.filter(
     (ingredient) => ingredient.type !== "bun"
   );
 
-  useEffect(() => {
-    let newTotalPrice = 0;
-    newTotalPrice = buns[0]?.price * 2;
-    middleIngredients.forEach((ingredient) => {
-      newTotalPrice += ingredient.price;
-      setTotalPrice(newTotalPrice);
-    });
-  }, [middleIngredients, buns]);
+  const [{ isHover }, dropTargetRef] = useDrop({
+    accept: "ingredient",
+    collect: (monitor) => ({
+      isHover: monitor.isOver(),
+    }),
+    drop: (item) => {
+      dispatch(setConstructorIngredients({ ...item, uniqueId: uuid() }));
+    },
+  });
 
-  let ingredientIds = [];
-  if (constructorIngredients.length !== 0) {
-    ingredientIds = [
-      buns[0]?._id,
-      ...middleIngredients?.map((ingredient) => ingredient._id),
-    ];
+  function handleDelete(ingredient) {
+    dispatch(deleteConstructorIngredient(ingredient.uniqueId));
   }
-  function handleOrder() {
-    api
-      .postOrder(ingredientIds)
-      .then((res) => {
-        if (res.success) {
-          openModal(res.order);
-        }
+
+  const handleOrder = () => {
+    const ingredientIds = constructorIngredients.map(
+      (ingredient) => ingredient._id
+    );
+
+    dispatch(postOrder(ingredientIds))
+      .unwrap()
+      .then((order) => {
+        openModal(order);
       })
-      .catch(console.error);
-  }
+      .catch((error) => console.error("Order post failed:", error));
+  };
 
   return (
-    <section className={`${burgerConstructor.container} mt-15`}>
+    <section className={`${burgerConstructor.block} mt-15`}>
       <div
-        className={`mr-4 ${burgerConstructor.ingredientRow} ${burgerConstructor.ingredientRow_disabled}`}
+        className={`${burgerConstructor.container} ${
+          isHover ? burgerConstructor.containerOnHover : ""
+        }`}
+        ref={dropTargetRef}
       >
-        <ConstructorElement
-          type="top"
-          isLocked={true}
-          text={`${buns[0]?.name} (верх)`}
-          price={buns[0]?.price}
-          thumbnail={buns[0]?.image}
-        />
-      </div>
-
-      <ul className={burgerConstructor.ingredientContainer}>
-        {middleIngredients.map((ingredient) => (
-          <li key={ingredient._id} className={burgerConstructor.ingredientRow}>
-            <DragIcon type="primary" />
+        {buns[0] && (
+          <div
+            className={`mr-4 ${burgerConstructor.ingredientRow} ${burgerConstructor.ingredientRow_disabled}`}
+          >
             <ConstructorElement
-              type={ingredient.type}
-              isLocked={false}
-              text={ingredient.name}
-              price={ingredient.price}
-              thumbnail={ingredient.image}
+              type="top"
+              isLocked={true}
+              text={`${buns[0]?.name} (верх)`}
+              price={buns[0]?.price}
+              thumbnail={buns[0]?.image}
             />
-          </li>
-        ))}
-      </ul>
+          </div>
+        )}
+        <ul className={burgerConstructor.ingredientContainer}>
+          {constructorIngredients.length > 0 &&
+            middleIngredients.map((ingredient) => (
+              <li
+                key={ingredient.uniqueId}
+                className={burgerConstructor.ingredientRow}
+              >
+                <DragIcon type="primary" />
+                <ConstructorElement
+                  handleClose={() => handleDelete(ingredient)}
+                  type={ingredient.type}
+                  isLocked={false}
+                  text={ingredient.name}
+                  price={ingredient.price}
+                  thumbnail={ingredient.image}
+                />
+              </li>
+            ))}
+        </ul>
 
-      <div
-        className={`mr-4 ${burgerConstructor.ingredientRow} ${burgerConstructor.ingredientRow_disabled}`}
-      >
-        <ConstructorElement
-          type="bottom"
-          isLocked={true}
-          text={`${buns[0]?.name} (низ)`}
-          price={buns[0]?.price}
-          thumbnail={buns[0]?.image}
-        />
+        {buns[0] && (
+          <div
+            className={`mr-4 ${burgerConstructor.ingredientRow} ${burgerConstructor.ingredientRow_disabled}`}
+          >
+            <ConstructorElement
+              type="bottom"
+              isLocked={true}
+              text={`${buns[0]?.name} (низ)`}
+              price={buns[0]?.price}
+              thumbnail={buns[0]?.image}
+            />
+          </div>
+        )}
       </div>
-
       <div className={`mt-10 ${burgerConstructor.btnContainer}`}>
         <p className="text text_color_primary text_type_digits-medium pr-2">
           {totalPrice}

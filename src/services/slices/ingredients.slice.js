@@ -5,7 +5,14 @@ const initialState = {
   allIngredients: [],
   constructorIngredients: [],
   currentIngredient: {},
+  totalPrice: 0,
 };
+
+function calculateTotalPrice(ingredients) {
+  return ingredients.reduce((total, item) => {
+    return total + item.price;
+  }, 0);
+}
 
 export const fetchIngredients = createAsyncThunk(
   "ingredients/fetchIngredients",
@@ -31,7 +38,22 @@ const ingredientsSlice = createSlice({
       state.allIngredients = action.payload;
     },
     setConstructorIngredients: (state, action) => {
-      state.constructorIngredients = action.payload;
+      const item = action.payload;
+      if (item.type === "bun") {
+        state.constructorIngredients = state.constructorIngredients.filter(
+          (ingredient) => ingredient.type !== "bun"
+        );
+        state.constructorIngredients.unshift(action.payload);
+        state.constructorIngredients.push(action.payload);
+      } else {
+        state.constructorIngredients.push(item);
+      }
+      state.totalPrice = calculateTotalPrice(state.constructorIngredients);
+    },
+    deleteConstructorIngredient: (state, action) => {
+      state.constructorIngredients = state.constructorIngredients.filter(
+        (ingredient) => ingredient.uniqueId !== action.payload
+      );
     },
     setCurrentIngredient: (state, action) => {
       state.currentIngredient = action.payload;
@@ -55,6 +77,7 @@ const ingredientsSlice = createSlice({
 export const {
   setAllIngredients,
   setConstructorIngredients,
+  deleteConstructorIngredient,
   setCurrentIngredient,
 } = ingredientsSlice.actions;
 export default ingredientsSlice.reducer;

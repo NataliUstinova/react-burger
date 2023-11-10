@@ -1,15 +1,22 @@
-import React, { useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import burgerIngredientsStyles from "./burger-ingredients.module.css";
 import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
 import IngredientsRowBlock from "./components/ingredient-row-block/ingredient-row-block";
 import PropTypes from "prop-types";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchIngredients } from "../../services/slices/ingredients.slice";
+import { setCurrentTab } from "../../services/slices/tabs.slice";
 
 const BurgerIngredients = ({ openModal }) => {
+  const dispatch = useDispatch();
+  const { currentTab } = useSelector((state) => state.tabs);
+  useEffect(() => {
+    dispatch(fetchIngredients());
+  }, [dispatch]);
+
   const { ingredients, isLoading } = useSelector((state) => state.ingredients);
 
   const TABS = ["Булки", "Соусы", "Начинки"];
-  const [currentTab, setCurrentTab] = useState(TABS[0]);
 
   const buns = useMemo(
     () => ingredients && ingredients?.filter((item) => item.type === "bun"),
@@ -29,16 +36,16 @@ const BurgerIngredients = ({ openModal }) => {
   const mainsRef = useRef(null);
 
   const handleTabClick = (tab) => {
-    setCurrentTab(tab);
+    dispatch(setCurrentTab(tab)); // Dispatch the setCurrentTab action instead of using local state
     switch (tab) {
-      case TABS[0]:
-        bunsRef?.current.scrollIntoView({ behavior: "smooth" });
+      case "Булки":
+        bunsRef.current?.scrollIntoView({ behavior: "smooth" });
         break;
-      case TABS[1]:
-        saucesRef?.current.scrollIntoView({ behavior: "smooth" });
+      case "Соусы":
+        saucesRef.current?.scrollIntoView({ behavior: "smooth" });
         break;
-      case TABS[2]:
-        mainsRef?.current.scrollIntoView({ behavior: "smooth" });
+      case "Начинки":
+        mainsRef.current?.scrollIntoView({ behavior: "smooth" });
         break;
       default:
         break;
