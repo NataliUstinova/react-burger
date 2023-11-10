@@ -86,18 +86,19 @@ const ingredientsSlice = createSlice({
       state.totalPrice = initialState.totalPrice;
     },
   },
-  extraReducers: {
-    [fetchIngredients.pending]: (state) => {
-      state.isLoading = true;
-    },
-    [fetchIngredients.fulfilled]: (state, action) => {
-      state.ingredients = action.payload;
-      state.isLoading = false;
-    },
-    [fetchIngredients.rejected]: (state, action) => {
-      state.isLoading = false;
-      state.error = action.payload;
-    },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchIngredients.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(fetchIngredients.fulfilled, (state, action) => {
+        state.ingredients = action.payload;
+        state.isLoading = false;
+      })
+      .addCase(fetchIngredients.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
+      });
   },
 });
 

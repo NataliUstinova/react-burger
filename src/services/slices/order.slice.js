@@ -36,21 +36,22 @@ const orderSlice = createSlice({
       state.status = "";
     },
   },
-  extraReducers: {
-    [postOrder.pending]: (state) => {
-      state.status = "loading";
-      state.loading = true;
-    },
-    [postOrder.fulfilled]: (state, action) => {
-      state.number = action.payload.number; // Ensure the payload has 'number' property
-      state.status = "succeeded";
-      state.loading = false;
-    },
-    [postOrder.rejected]: (state, action) => {
-      state.status = "failed";
-      state.error = action.payload; // This will be the error message or the whole response
-      state.loading = false;
-    },
+  extraReducers: (builder) => {
+    builder
+      .addCase(postOrder.pending, (state) => {
+        state.status = "loading";
+        state.loading = true;
+      })
+      .addCase(postOrder.fulfilled, (state, action) => {
+        state.number = action.payload.number; // Ensure the payload has 'number' property
+        state.status = "succeeded";
+        state.loading = false;
+      })
+      .addCase(postOrder.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload; // This will be the error message or the whole response
+        state.loading = false;
+      });
   },
 });
 
