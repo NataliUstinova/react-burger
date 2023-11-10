@@ -76,6 +76,11 @@ const ingredientsSlice = createSlice({
       state.middleIngredients.splice(dragIndex, 1);
       state.middleIngredients.splice(hoverIndex, 0, dragIngredient);
     },
+    resetConstructor: (state) => {
+      state.middleIngredients = initialState.middleIngredients;
+      state.constructorIngredients = initialState.constructorIngredients;
+      state.totalPrice = initialState.totalPrice;
+    },
   },
   extraReducers: {
     [fetchIngredients.pending]: (state) => {
@@ -98,5 +103,6 @@ export const {
   deleteConstructorIngredient,
   setCurrentIngredient,
   moveMiddleIngredients,
+  resetConstructor,
 } = ingredientsSlice.actions;
 export default ingredientsSlice.reducer;

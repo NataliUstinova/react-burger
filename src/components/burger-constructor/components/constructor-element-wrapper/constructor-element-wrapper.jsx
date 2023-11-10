@@ -10,6 +10,8 @@ import {
   DragIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import elementWrapper from "./constructor-element-wrapper.module.css";
+import { ingredientPropTypes } from "../../../../utils/data";
+import PropTypes from "prop-types";
 
 export default function ConstructorElementWrapper({ item, index }) {
   const dispatch = useDispatch();
@@ -81,3 +83,8 @@ export default function ConstructorElementWrapper({ item, index }) {
     </div>
   );
 }
+
+ConstructorElementWrapper.propTypes = {
+  item: PropTypes.shape(ingredientPropTypes).isRequired,
+  index: PropTypes.number.isRequired,
+};

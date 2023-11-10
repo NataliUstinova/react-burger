@@ -8,7 +8,10 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { useDrop } from "react-dnd";
 import { v4 as uuid } from "uuid";
-import { setConstructorIngredients } from "../../services/slices/ingredients.slice";
+import {
+  setConstructorIngredients,
+  resetConstructor,
+} from "../../services/slices/ingredients.slice";
 import { postOrder } from "../../services/slices/order.slice";
 import { modalTypes, openModal } from "../../services/slices/modal.slice";
 import ConstructorElementWrapper from "./components/constructor-element-wrapper/constructor-element-wrapper";
@@ -43,52 +46,74 @@ const BurgerConstructor = () => {
       .then(() => {
         dispatch(openModal({ modalType: modalTypes.ORDER }));
       })
-      .catch((error) => console.error("Order post failed:", error));
+      .catch((error) => console.error("Order post failed:", error))
+      .finally(() => {
+        dispatch(resetConstructor());
+      });
   };
 
   return (
     <section className={`${burgerConstructor.block} mt-15`}>
       <div
         className={`${burgerConstructor.container} ${
-          isHover ? burgerConstructor.containerOnHover : ""
+          isHover || constructorIngredients.length === 0
+            ? burgerConstructor.containerOnHover
+            : ""
         }`}
         ref={dropTargetRef}
       >
-        {buns[0] && (
-          <div
-            className={`mr-4 ${burgerConstructor.ingredientRow} ${burgerConstructor.ingredientRow_disabled}`}
+        {constructorIngredients.length === 0 && (
+          <p
+            className={`${burgerConstructor.placeholder} text text_color_inactive text_type_main-default`}
           >
-            <ConstructorElement
-              type="top"
-              isLocked={true}
-              text={`${buns[0]?.name} (верх)`}
-              price={buns[0]?.price}
-              thumbnail={buns[0]?.image}
-            />
-          </div>
+            Перетащите ингредиенты
+          </p>
         )}
-        <ul className={burgerConstructor.ingredientContainer}>
-          {middleIngredients.map((ingredient, index) => (
-            <ConstructorElementWrapper
-              key={uuid()}
-              item={ingredient}
-              index={index}
-            />
-          ))}
-        </ul>
+        {constructorIngredients.length > 0 && (
+          <>
+            {buns[0] && (
+              <div
+                className={`mr-4 ${burgerConstructor.ingredientRow} ${burgerConstructor.ingredientRow_disabled}`}
+              >
+                <ConstructorElement
+                  type="top"
+                  isLocked={true}
+                  text={`${buns[0]?.name} (верх)`}
+                  price={buns[0]?.price}
+                  thumbnail={buns[0]?.image}
+                />
+              </div>
+            )}
+            <ul
+              className={`${burgerConstructor.ingredientContainer} ${
+                middleIngredients.length > 2
+                  ? burgerConstructor.ingredientContainerShowTrack
+                  : ""
+              }`}
+            >
+              {middleIngredients.map((ingredient, index) => (
+                <ConstructorElementWrapper
+                  key={uuid()}
+                  item={ingredient}
+                  index={index}
+                />
+              ))}
+            </ul>
 
-        {buns[0] && (
-          <div
-            className={`mr-4 ${burgerConstructor.ingredientRow} ${burgerConstructor.ingredientRow_disabled}`}
-          >
-            <ConstructorElement
-              type="bottom"
-              isLocked={true}
-              text={`${buns[0]?.name} (низ)`}
-              price={buns[0]?.price}
-              thumbnail={buns[0]?.image}
-            />
-          </div>
+            {buns[0] && (
+              <div
+                className={`mr-4 ${burgerConstructor.ingredientRow} ${burgerConstructor.ingredientRow_disabled}`}
+              >
+                <ConstructorElement
+                  type="bottom"
+                  isLocked={true}
+                  text={`${buns[0]?.name} (низ)`}
+                  price={buns[0]?.price}
+                  thumbnail={buns[0]?.image}
+                />
+              </div>
+            )}
+          </>
         )}
       </div>
       <div className={`mt-10 ${burgerConstructor.btnContainer}`}>
@@ -103,7 +128,7 @@ const BurgerConstructor = () => {
           children="Оформить заказ"
           extraClass="ml-10"
           onClick={handleOrder}
-          disabled={constructorIngredients.length === 0}
+          disabled={constructorIngredients.length === 0 || !buns[0]}
         />
       </div>
     </section>
