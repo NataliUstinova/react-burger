@@ -4,29 +4,23 @@ import {
   Button,
   ConstructorElement,
   CurrencyIcon,
-  DragIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { useDispatch, useSelector } from "react-redux";
 import { useDrop } from "react-dnd";
 import { v4 as uuid } from "uuid";
-import {
-  setConstructorIngredients,
-  deleteConstructorIngredient,
-} from "../../services/slices/ingredients.slice";
+import { setConstructorIngredients } from "../../services/slices/ingredients.slice";
 import { postOrder } from "../../services/slices/order.slice";
 import { modalTypes, openModal } from "../../services/slices/modal.slice";
+import ConstructorElementWrapper from "./components/constructor-element-wrapper/constructor-element-wrapper";
 
 const BurgerConstructor = () => {
   const dispatch = useDispatch();
-  const { constructorIngredients, totalPrice } = useSelector(
+  const { constructorIngredients, middleIngredients, totalPrice } = useSelector(
     (state) => state.ingredients
   );
 
   const buns = constructorIngredients?.filter(
     (ingredient) => ingredient.type === "bun"
-  );
-  const middleIngredients = constructorIngredients?.filter(
-    (ingredient) => ingredient.type !== "bun"
   );
 
   const [{ isHover }, dropTargetRef] = useDrop({
@@ -38,10 +32,6 @@ const BurgerConstructor = () => {
       dispatch(setConstructorIngredients({ ...item, uniqueId: uuid() }));
     },
   });
-
-  function handleDelete(ingredient) {
-    dispatch(deleteConstructorIngredient(ingredient.uniqueId));
-  }
 
   const handleOrder = () => {
     const ingredientIds = constructorIngredients.map(
@@ -78,23 +68,13 @@ const BurgerConstructor = () => {
           </div>
         )}
         <ul className={burgerConstructor.ingredientContainer}>
-          {constructorIngredients.length > 0 &&
-            middleIngredients.map((ingredient) => (
-              <li
-                key={ingredient.uniqueId}
-                className={burgerConstructor.ingredientRow}
-              >
-                <DragIcon type="primary" />
-                <ConstructorElement
-                  handleClose={() => handleDelete(ingredient)}
-                  type={ingredient.type}
-                  isLocked={false}
-                  text={ingredient.name}
-                  price={ingredient.price}
-                  thumbnail={ingredient.image}
-                />
-              </li>
-            ))}
+          {middleIngredients.map((ingredient, index) => (
+            <ConstructorElementWrapper
+              key={uuid()}
+              item={ingredient}
+              index={index}
+            />
+          ))}
         </ul>
 
         {buns[0] && (

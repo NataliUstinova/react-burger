@@ -4,6 +4,7 @@ import { api } from "../../utils/api";
 const initialState = {
   allIngredients: [],
   constructorIngredients: [],
+  middleIngredients: [],
   currentIngredient: {},
   totalPrice: 0,
 };
@@ -37,6 +38,7 @@ const ingredientsSlice = createSlice({
     setAllIngredients: (state, action) => {
       state.allIngredients = action.payload;
     },
+
     setConstructorIngredients: (state, action) => {
       const item = action.payload;
       if (item.type === "bun") {
@@ -48,15 +50,31 @@ const ingredientsSlice = createSlice({
       } else {
         state.constructorIngredients.push(item);
       }
+      state.middleIngredients = state.constructorIngredients.filter(
+        (ingredient) => ingredient.type !== "bun"
+      );
       state.totalPrice = calculateTotalPrice(state.constructorIngredients);
     },
+
     deleteConstructorIngredient: (state, action) => {
+      state.middleIngredients = state.middleIngredients.filter(
+        (ingredient) => ingredient.uniqueId !== action.payload
+      );
       state.constructorIngredients = state.constructorIngredients.filter(
         (ingredient) => ingredient.uniqueId !== action.payload
       );
+      state.totalPrice = calculateTotalPrice(state.constructorIngredients);
     },
+
     setCurrentIngredient: (state, action) => {
       state.currentIngredient = action.payload;
+    },
+
+    moveMiddleIngredients: (state, action) => {
+      const { dragIndex, hoverIndex } = action.payload;
+      const dragIngredient = { ...state.middleIngredients.at(dragIndex) };
+      state.middleIngredients.splice(dragIndex, 1);
+      state.middleIngredients.splice(hoverIndex, 0, dragIngredient);
     },
   },
   extraReducers: {
@@ -79,5 +97,6 @@ export const {
   setConstructorIngredients,
   deleteConstructorIngredient,
   setCurrentIngredient,
+  moveMiddleIngredients,
 } = ingredientsSlice.actions;
 export default ingredientsSlice.reducer;

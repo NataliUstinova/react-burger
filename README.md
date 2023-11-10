@@ -26,7 +26,7 @@
 ## Спринт 2 / Часть 2
 - [x] `Redux` хранилищe вместо `Context`
 - [x] перетаскиваниe ингредиентов c помощью `react-dnd`
-- [ ] Вложенная сортировка в `BurgerConstructor`
+- [x] Вложенная сортировка в `BurgerConstructor`
 ---
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

@@ -1,0 +1,10 @@
+.ingredientRow {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: end;
+  gap: 8px;
+  padding: 0 8px 0 0 ;
+  cursor: pointer;
+  position: relative;
+}
