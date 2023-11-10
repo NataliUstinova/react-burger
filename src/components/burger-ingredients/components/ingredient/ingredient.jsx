@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import ingredientStyles from "./ingredient.module.css";
 import {
   Counter,
@@ -15,9 +15,11 @@ const Ingredient = ({ ingredient }) => {
   const { image, name, price, _id } = ingredient;
   const dispatch = useDispatch();
   const { constructorIngredients } = useSelector((state) => state.ingredients);
-  const counter = constructorIngredients.filter(
-    (item) => item._id === _id
-  ).length;
+
+  const counter = useMemo(
+    () => constructorIngredients.filter((item) => item._id === _id).length,
+    [constructorIngredients, _id]
+  );
 
   function handleClick() {
     dispatch(setCurrentIngredient(ingredient));
