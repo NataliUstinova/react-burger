@@ -5,6 +5,7 @@ import IngredientsRowBlock from "./components/ingredient-row-block/ingredient-ro
 import { useDispatch, useSelector } from "react-redux";
 import { fetchIngredients } from "../../services/slices/ingredients.slice";
 import { setCurrentTab } from "../../services/slices/tabs.slice";
+import { useInView } from "react-intersection-observer";
 
 const BurgerIngredients = () => {
   const dispatch = useDispatch();
@@ -29,11 +30,22 @@ const BurgerIngredients = () => {
     () => ingredients && ingredients?.filter((item) => item.type === "main"),
     [ingredients]
   );
-
   const bunsRef = useRef(null);
   const saucesRef = useRef(null);
   const mainsRef = useRef(null);
 
+  const [bunsInView] = useInView({
+    threshold: 0.5,
+    onChange: (inView) => inView && dispatch(setCurrentTab(TABS[0])),
+  });
+  const [sauceInView] = useInView({
+    threshold: 0.5,
+    onChange: (inView) => inView && dispatch(setCurrentTab(TABS[1])),
+  });
+  const [mainsInView] = useInView({
+    threshold: 0.2,
+    onChange: (inView) => inView && dispatch(setCurrentTab(TABS[2])),
+  });
   const handleTabClick = (tab) => {
     dispatch(setCurrentTab(tab)); // Dispatch the setCurrentTab action instead of using local state
     switch (tab) {
@@ -70,21 +82,27 @@ const BurgerIngredients = () => {
       <section className={burgerIngredientsStyles.ingredientContainer}>
         {!isLoading && ingredients?.length > 0 && (
           <>
-            <IngredientsRowBlock
-              title={TABS[0]}
-              ingredients={buns}
-              ref={bunsRef}
-            />
-            <IngredientsRowBlock
-              title={TABS[1]}
-              ingredients={sauces}
-              ref={saucesRef}
-            />
-            <IngredientsRowBlock
-              title={TABS[2]}
-              ingredients={mains}
-              ref={mainsRef}
-            />
+            <div ref={bunsInView}>
+              <IngredientsRowBlock
+                title={TABS[0]}
+                ingredients={buns}
+                ref={bunsRef}
+              />
+            </div>
+            <div ref={sauceInView}>
+              <IngredientsRowBlock
+                title={TABS[1]}
+                ingredients={sauces}
+                ref={saucesRef}
+              />
+            </div>
+            <div ref={mainsInView}>
+              <IngredientsRowBlock
+                title={TABS[2]}
+                ingredients={mains}
+                ref={mainsRef}
+              />
+            </div>
           </>
         )}
       </section>
