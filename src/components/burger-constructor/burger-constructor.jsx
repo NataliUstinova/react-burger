@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import burgerConstructor from "./burger-constructor.module.css";
 import PropTypes from "prop-types";
 import {
@@ -21,9 +21,6 @@ const BurgerConstructor = ({ openModal }) => {
   const { constructorIngredients, totalPrice } = useSelector(
     (state) => state.ingredients
   );
-  useEffect(() => {
-    console.log(constructorIngredients);
-  }, [constructorIngredients]);
 
   const buns = constructorIngredients?.filter(
     (ingredient) => ingredient.type === "bun"
@@ -126,6 +123,7 @@ const BurgerConstructor = ({ openModal }) => {
           children="Оформить заказ"
           extraClass="ml-10"
           onClick={handleOrder}
+          disabled={constructorIngredients.length === 0}
         />
       </div>
     </section>

@@ -23,13 +23,7 @@ function App() {
             isOpen={isModalOpen}
             onOpen={openModal}
             onClose={closeModal}
-            children={
-              modalData.name ? (
-                <IngredientDetails ingredient={modalData} />
-              ) : (
-                <OrderDetails order={modalData} />
-              )
-            }
+            children={modalData.type ? <IngredientDetails /> : <OrderDetails />}
           />
         )}
       </Suspense>

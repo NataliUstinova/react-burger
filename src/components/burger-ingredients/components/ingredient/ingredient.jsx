@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import ingredientStyles from "./ingredient.module.css";
 import {
   Counter,
@@ -7,19 +7,20 @@ import {
 import PropTypes from "prop-types";
 import { ingredientPropTypes } from "../../../../utils/data";
 import { useDrag } from "react-dnd";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { setCurrentIngredient } from "../../../../services/slices/ingredients.slice";
 
 const Ingredient = ({ ingredient, openModal }) => {
   const { image, name, price, _id } = ingredient;
-
+  const dispatch = useDispatch();
   const { constructorIngredients } = useSelector((state) => state.ingredients);
-
   const counter = constructorIngredients.filter(
     (item) => item._id === _id
   ).length;
 
   function handleClick() {
-    openModal({ ...ingredient, title: "Детали ингредиента" });
+    dispatch(setCurrentIngredient(ingredient));
+    openModal({ type: "ingredient" });
   }
 
   const [{ opacity }, dragRef] = useDrag({

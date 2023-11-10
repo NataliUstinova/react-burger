@@ -1,10 +1,10 @@
 import React from "react";
 import orderDetailsStyles from "./order-details.module.css";
 import { Done } from "../../images";
-import PropTypes from "prop-types";
-import { orderPropTypes } from "../../utils/data";
+import { useSelector } from "react-redux";
 
-const OrderDetails = ({ order }) => {
+const OrderDetails = () => {
+  const order = useSelector((state) => state.order);
   return (
     <>
       <h2
@@ -31,7 +31,4 @@ const OrderDetails = ({ order }) => {
   );
 };
 
-OrderDetails.propTypes = {
-  order: PropTypes.shape(orderPropTypes).isRequired,
-};
 export default OrderDetails;
