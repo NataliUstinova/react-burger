@@ -4,20 +4,10 @@ import { createPortal } from "react-dom";
 import ModalOverlay from "../modal-overlay/modal-overlay";
 import PropTypes from "prop-types";
 import { CloseIcon } from "@ya.praktikum/react-developer-burger-ui-components";
-import { useDispatch, useSelector } from "react-redux";
-import { closeModal, modalTypes } from "../../services/slices/modal.slice";
-import { resetCurrentIngredient } from "../../services/slices/ingredients.slice";
-import { resetOrder } from "../../services/slices/order.slice";
+import { useSelector } from "react-redux";
 
-const Modal = ({ children }) => {
-  const { isOpen, modalType } = useSelector((state) => state.modal);
-  const dispatch = useDispatch();
-  const onClose = () => {
-    dispatch(closeModal());
-    modalType === modalTypes.INGREDIENT
-      ? dispatch(resetCurrentIngredient())
-      : dispatch(resetOrder());
-  };
+const Modal = ({ children, onClose }) => {
+  const { isOpen } = useSelector((state) => state.modal);
   useEffect(() => {
     function closeByEscape(evt) {
       if (evt.key === "Escape") {
@@ -52,6 +42,7 @@ const Modal = ({ children }) => {
 
 Modal.propTypes = {
   children: PropTypes.node,
+  onClose: PropTypes.func.isRequired,
 };
 
 export default Modal;

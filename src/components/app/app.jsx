@@ -6,8 +6,10 @@ import OrderFeed from "../../pages/order-feed/order-feed";
 import Profile from "../../pages/profile/profile";
 import AppHeader from "../app-header/app-header";
 import Modal from "../modal/modal";
-import { useSelector } from "react-redux";
-import { modalTypes } from "../../services/slices/modal.slice";
+import { useDispatch, useSelector } from "react-redux";
+import { closeModal, modalTypes } from "../../services/slices/modal.slice";
+import { resetCurrentIngredient } from "../../services/slices/ingredients.slice";
+import { resetOrder } from "../../services/slices/order.slice";
 const IngredientDetails = lazy(() =>
   import("../ingredient-details/ingredient-details")
 );
@@ -15,13 +17,20 @@ const OrderDetails = lazy(() => import("../order-details/order-details"));
 
 function App() {
   const { isOpen, modalType } = useSelector((state) => state.modal);
-
+  const dispatch = useDispatch();
+  const handleModalClose = () => {
+    dispatch(closeModal());
+    modalType === modalTypes.INGREDIENT
+      ? dispatch(resetCurrentIngredient())
+      : dispatch(resetOrder());
+  };
   return (
     <div className={appStyles.container}>
       <AppHeader />
       <Suspense fallback={null}>
         {isOpen && (
           <Modal
+            onClose={handleModalClose}
             children={
               modalType === modalTypes.INGREDIENT ? (
                 <IngredientDetails />
