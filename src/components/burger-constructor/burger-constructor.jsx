@@ -7,7 +7,6 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { useDispatch, useSelector } from "react-redux";
 import { useDrop } from "react-dnd";
-import { v4 as uuid } from "uuid";
 import {
   setConstructorIngredients,
   resetConstructorIngredients,
@@ -15,6 +14,7 @@ import {
 import { postOrder } from "../../services/slices/order.slice";
 import { modalTypes, openModal } from "../../services/slices/modal.slice";
 import ConstructorElementWrapper from "./components/constructor-element-wrapper/constructor-element-wrapper";
+import { v4 as uuid } from "uuid";
 
 const BurgerConstructor = () => {
   const dispatch = useDispatch();
@@ -46,10 +46,8 @@ const BurgerConstructor = () => {
       .then(() => {
         dispatch(openModal({ modalType: modalTypes.ORDER }));
       })
-      .catch((error) => console.error("Order post failed:", error))
-      .finally(() => {
-        dispatch(resetConstructorIngredients());
-      });
+      .then(() => dispatch(resetConstructorIngredients()))
+      .catch((error) => console.error("Order post failed:", error));
   };
 
   return (
@@ -93,7 +91,7 @@ const BurgerConstructor = () => {
             >
               {middleIngredients.map((ingredient, index) => (
                 <ConstructorElementWrapper
-                  key={uuid()}
+                  key={ingredient.uniqueId}
                   item={ingredient}
                   index={index}
                 />
