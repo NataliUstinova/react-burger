@@ -17,16 +17,10 @@ function calculateTotalPrice(ingredients) {
 
 export const fetchIngredients = createAsyncThunk(
   "ingredients/fetchIngredients",
-  async (_, { rejectWithValue }) => {
-    try {
-      const response = await api.fetchIngredients();
-      if (response.success) {
-        return response.data;
-      } else {
-        return rejectWithValue(response.error);
-      }
-    } catch (error) {
-      return rejectWithValue(error.message);
+  async (_) => {
+    const response = await api.fetchIngredients();
+    if (response.success) {
+      return response.data;
     }
   }
 );
