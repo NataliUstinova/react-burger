@@ -10,6 +10,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { closeModal, modalTypes } from "../../services/slices/modal.slice";
 import { resetCurrentIngredient } from "../../services/slices/ingredients.slice";
 import { resetOrder } from "../../services/slices/order.slice";
+import Login from "../../pages/login/login";
+import Register from "../../pages/register/register";
+import ForgotPassword from "../../pages/forgot-password/forgot-password";
+import ResetPassword from "../../pages/reset-password/reset-password";
+import Ingredient from "../../pages/ingredient/ingredient";
 const IngredientDetails = lazy(() =>
   import("../ingredient-details/ingredient-details")
 );
@@ -43,8 +48,16 @@ function App() {
       </Suspense>
       <Routes>
         <Route path="/" element={<Main />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+
         <Route path="/order-feed" element={<OrderFeed />} />
         <Route path="/profile" element={<Profile />} />
+
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+
+        <Route path="/ingredients/:id" element={<Ingredient />} />
       </Routes>
     </div>
   );
