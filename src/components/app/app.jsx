@@ -1,84 +1,53 @@
-import React, { lazy, Suspense, useEffect, useState } from "react";
+import React, { lazy, Suspense } from "react";
 import { Route, Routes } from "react-router-dom";
 import appStyles from "./app.module.css";
 import Main from "../../pages/main/main";
 import OrderFeed from "../../pages/order-feed/order-feed";
 import Profile from "../../pages/profile/profile";
 import AppHeader from "../app-header/app-header";
-import { api } from "../../utils/api";
 import Modal from "../modal/modal";
-import { useModal } from "../../hooks/useModal";
-import { IngredientsContext } from "../../context/ingredients-context";
-import PropTypes from "prop-types";
-import { ingredientPropTypes } from "../../utils/data";
+import { useDispatch, useSelector } from "react-redux";
+import { closeModal, modalTypes } from "../../services/slices/modal.slice";
+import { resetCurrentIngredient } from "../../services/slices/ingredients.slice";
+import { resetOrder } from "../../services/slices/order.slice";
 const IngredientDetails = lazy(() =>
   import("../ingredient-details/ingredient-details")
 );
 const OrderDetails = lazy(() => import("../order-details/order-details"));
 
 function App() {
-  const [ingredients, setIngredients] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-
-  const { isModalOpen, modalData, openModal, closeModal } = useModal();
-
-  useEffect(() => {
-    setIsLoading(true);
-    api
-      .fetchIngredients()
-      .then((res) => {
-        if (res.success) {
-          setIngredients(res.data);
-          console.log(res.data);
-        }
-      })
-      .catch(console.error)
-      .finally(() => {
-        setIsLoading(false);
-      });
-  }, []);
-
+  const { isOpen, modalType } = useSelector((state) => state.modal);
+  const dispatch = useDispatch();
+  const handleModalClose = () => {
+    dispatch(closeModal());
+    modalType === modalTypes.INGREDIENT
+      ? dispatch(resetCurrentIngredient())
+      : dispatch(resetOrder());
+  };
   return (
     <div className={appStyles.container}>
       <AppHeader />
       <Suspense fallback={null}>
-        {modalData && (
+        {isOpen && (
           <Modal
-            isOpen={isModalOpen}
-            onOpen={openModal}
-            onClose={closeModal}
+            onClose={handleModalClose}
             children={
-              modalData.name ? (
-                <IngredientDetails ingredient={modalData} />
+              modalType === modalTypes.INGREDIENT ? (
+                <IngredientDetails />
               ) : (
-                <OrderDetails order={modalData} />
+                <OrderDetails />
               )
             }
           />
         )}
       </Suspense>
       <Routes>
-        <Route
-          path="/"
-          element={
-            <IngredientsContext.Provider value={ingredients}>
-              <Main
-                isLoading={isLoading}
-                openModal={openModal}
-                closeModal={closeModal}
-              />
-            </IngredientsContext.Provider>
-          }
-        />
+        <Route path="/" element={<Main />} />
         <Route path="/order-feed" element={<OrderFeed />} />
         <Route path="/profile" element={<Profile />} />
       </Routes>
     </div>
   );
 }
-
-IngredientsContext.Provider.propTypes = {
-  value: PropTypes.arrayOf(PropTypes.shape(ingredientPropTypes)),
-};
 
 export default App;

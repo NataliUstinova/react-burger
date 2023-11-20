@@ -1,16 +1,16 @@
 import React from "react";
 import ingredientDetailsStyles from "./ingredient-details.module.css";
-import { ingredientPropTypes } from "../../utils/data";
-import * as propTypes from "prop-types";
-const IngredientDetails = ({ ingredient }) => {
-  const { image, name, carbohydrates, fat, proteins, calories, title } =
-    ingredient;
+import { useSelector } from "react-redux";
+const IngredientDetails = () => {
+  const { currentIngredient } = useSelector((state) => state.ingredients);
+  const { image, name, carbohydrates, fat, proteins, calories } =
+    currentIngredient;
   return (
     <div className={ingredientDetailsStyles.container}>
       <h2
         className={`text text_color_primary text_type_main-large ${ingredientDetailsStyles.title}`}
       >
-        {title}
+        Детали ингредиента
       </h2>
       <img
         loading="lazy"
@@ -62,10 +62,6 @@ const IngredientDetails = ({ ingredient }) => {
       </div>
     </div>
   );
-};
-
-IngredientDetails.propTypes = {
-  ingredient: propTypes.shape(ingredientPropTypes).isRequired,
 };
 
 export default IngredientDetails;

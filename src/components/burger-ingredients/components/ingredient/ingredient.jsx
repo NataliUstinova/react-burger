@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo } from "react";
 import ingredientStyles from "./ingredient.module.css";
 import {
   Counter,
@@ -6,18 +6,40 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import PropTypes from "prop-types";
 import { ingredientPropTypes } from "../../../../utils/data";
+import { useDrag } from "react-dnd";
+import { useDispatch, useSelector } from "react-redux";
+import { setCurrentIngredient } from "../../../../services/slices/ingredients.slice";
+import { modalTypes, openModal } from "../../../../services/slices/modal.slice";
 
-const Ingredient = ({ ingredient, openModal }) => {
-  const { image, name, price } = ingredient;
-  const [counter, setCounter] = useState(0);
-  function handleCounterClick() {
-    setCounter((prev) => prev + 1);
-    openModal({ ...ingredient, title: "Детали ингредиента" });
+const Ingredient = ({ ingredient }) => {
+  const { image, name, price, _id } = ingredient;
+  const dispatch = useDispatch();
+  const { constructorIngredients } = useSelector((state) => state.ingredients);
+
+  const counter = useMemo(
+    () => constructorIngredients.filter((item) => item._id === _id).length,
+    [constructorIngredients, _id]
+  );
+
+  function handleClick() {
+    dispatch(setCurrentIngredient(ingredient));
+    dispatch(openModal({ modalType: modalTypes.INGREDIENT }));
   }
+
+  const [{ opacity }, dragRef] = useDrag({
+    type: "ingredient",
+    item: { ...ingredient },
+    collect: (monitor) => ({
+      opacity: monitor.isDragging() ? 0.1 : 1,
+    }),
+  });
+
   return (
     <li
+      ref={dragRef}
       className={ingredientStyles.ingredientBlock}
-      onClick={handleCounterClick}
+      onClick={handleClick}
+      style={{ opacity: opacity }}
     >
       {counter !== 0 && (
         <Counter
@@ -44,7 +66,6 @@ const Ingredient = ({ ingredient, openModal }) => {
 
 Ingredient.propTypes = {
   ingredient: PropTypes.shape(ingredientPropTypes).isRequired,
-  openModal: PropTypes.func.isRequired,
 };
 
 export default Ingredient;

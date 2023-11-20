@@ -1,3 +1,12 @@
+.block {
+  max-width: 600px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+  justify-content: start;
+  height: 100%;
+}
 .container {
   max-width: 600px;
   width: 100%;
@@ -5,7 +14,7 @@
   flex-direction: column;
   align-items: end;
   justify-content: start;
-  height: 120%;
+  height: 90%;
 }
 
 .ingredientContainer {
@@ -17,15 +26,30 @@
   flex-direction: column;
   padding: 16px 0;
   margin: 0;
-  max-height: 42%;
+  max-height: 57%;
   overflow-y: scroll;
+  min-height: 170px;
+}
+
+.placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+}
+
+.containerOnHover {
+  outline: 2px dashed #2f2f3777;
+  border-radius: 6px;
 }
 
 .ingredientContainer::-webkit-scrollbar {
   width: 8px;
 }
 
-.ingredientContainer::-webkit-scrollbar-track {
+.ingredientContainerShowTrack::-webkit-scrollbar-track {
   box-shadow: inset 0 0 10px #2f2f37;
 }
 

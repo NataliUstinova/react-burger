@@ -4,8 +4,10 @@ import { createPortal } from "react-dom";
 import ModalOverlay from "../modal-overlay/modal-overlay";
 import PropTypes from "prop-types";
 import { CloseIcon } from "@ya.praktikum/react-developer-burger-ui-components";
+import { useSelector } from "react-redux";
 
-const Modal = ({ isOpen, onClose, children }) => {
+const Modal = ({ children, onClose }) => {
+  const { isOpen } = useSelector((state) => state.modal);
   useEffect(() => {
     function closeByEscape(evt) {
       if (evt.key === "Escape") {
@@ -39,9 +41,8 @@ const Modal = ({ isOpen, onClose, children }) => {
 };
 
 Modal.propTypes = {
-  isOpen: PropTypes.bool.isRequired,
-  onClose: PropTypes.func.isRequired,
   children: PropTypes.node,
+  onClose: PropTypes.func.isRequired,
 };
 
 export default Modal;

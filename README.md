@@ -22,6 +22,12 @@
 - [x] Подсчёт итоговой стоимости бургера
 - [x] Возможность создавать заказ - При нажатии на кнопку «Оформить заказ» отправлять запрос к API
 - [x] Типизация через `PropTypes`
+
+## Спринт 2 / Часть 2
+- [x] `Redux` хранилищe вместо `Context`
+- [x] перетаскиваниe ингредиентов c помощью `react-dnd`
+- [x] Вложенная сортировка в `BurgerConstructor`
+- [x] Изменение текущей вкладки `BurgerIngredients` в зависимости от скролла
 ---
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
