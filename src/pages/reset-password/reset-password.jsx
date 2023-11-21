@@ -4,41 +4,61 @@ import {
   Button,
   Input,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import useValidation from "../../hooks/useValidation";
+import { api } from "../../utils/api";
 
 const ResetPassword = () => {
-  const [value, setValue] = React.useState("");
-  const handleChange = (e) => {
-    setValue(e.target.value);
-  };
+  const { values, errors, handleInputChange, isDisabled } =
+    useValidation("form");
+  const navigate = useNavigate();
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    api
+      .confirmPasswordReset(values.password, values.token)
+      .then((res) => {
+        console.log(res);
+        if (res.success) {
+          navigate("/profile");
+        }
+      })
+      .catch(console.error);
+  }
+
   return (
-    <div className={styles.container}>
+    <form className={`${styles.container} form`} onSubmit={handleSubmit}>
       <h1 className="text text_type_main-medium">Восстановление пароля</h1>
       <Input
         type="password"
         placeholder="Введите новый пароль"
-        value={value}
-        onChange={(e) => handleChange(e)}
+        value={values.password || ""}
+        onChange={(e) => handleInputChange(e)}
         icon={"ShowIcon"}
         onIconClick={() => {}}
         name={"password"}
-        error={false}
-        errorText={"Ошибка"}
+        error={!!errors.password}
+        errorText={errors.password}
         size={"default"}
         extraClass="mt-6 mb-6"
       />
       <Input
         type="text"
         placeholder="Введите код из письма"
-        value={value}
-        onChange={(e) => handleChange(e)}
-        name={"code"}
-        error={false}
-        errorText={"Ошибка"}
+        value={values.token || ""}
+        onChange={(e) => handleInputChange(e)}
+        name="token"
+        error={!!errors.token}
+        errorText={errors.token}
         size={"default"}
         extraClass="mb-6"
       />
-      <Button type="primary" size="medium" htmlType="submit">
+      <Button
+        type="primary"
+        size="medium"
+        htmlType="submit"
+        disabled={!isDisabled}
+      >
         Сохранить
       </Button>
 
@@ -51,7 +71,7 @@ const ResetPassword = () => {
           Войти
         </Link>
       </p>
-    </div>
+    </form>
   );
 };
 

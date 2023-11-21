@@ -39,6 +39,14 @@ class Api {
       body: JSON.stringify({ email: email }),
     });
   }
+
+  confirmPasswordReset(password, token) {
+    return this._request("/password-reset/reset", {
+      method: "POST",
+      headers: this._headers,
+      body: JSON.stringify({ password: password, token: token }),
+    });
+  }
 }
 
 export const api = new Api({
