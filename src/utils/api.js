@@ -31,6 +31,14 @@ class Api {
       body: JSON.stringify({ ingredients: ingredientsIds }),
     });
   }
+
+  resetPassword(email) {
+    return this._request("/password-reset", {
+      method: "POST",
+      headers: this._headers,
+      body: JSON.stringify({ email: email }),
+    });
+  }
 }
 
 export const api = new Api({
