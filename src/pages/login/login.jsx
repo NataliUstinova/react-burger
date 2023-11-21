@@ -7,11 +7,21 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import useValidation from "../../hooks/useValidation";
 import { api } from "../../utils/api";
+import {
+  setUserEmail,
+  setUserIsAuth,
+  setUserPassword,
+  setUserRefreshToken,
+  setUserToken,
+} from "../../services/slices/user.slice";
+import { useDispatch } from "react-redux";
+import { setCookie } from "../../utils/cookies";
 
 const Login = () => {
   const { values, errors, handleInputChange, isDisabled } =
     useValidation("form");
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -20,6 +30,16 @@ const Login = () => {
       .then((res) => {
         console.log(res);
         if (res.success) {
+          setCookie("refreshToken", res.refreshToken, { expires: null });
+          setCookie("token", decodeURIComponent(res.accessToken), {
+            expires: 20 * 60 * 1000,
+          });
+          dispatch(setUserEmail(values.email));
+          dispatch(setUserPassword(values.password));
+          dispatch(setUserIsAuth(true));
+          dispatch(setUserToken(res.accessToken));
+          dispatch(setUserRefreshToken(res.refreshToken));
+
           navigate("/profile");
         }
       })

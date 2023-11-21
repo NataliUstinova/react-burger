@@ -5,7 +5,7 @@ import {
   CurrencyIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import PropTypes from "prop-types";
-import { ingredientPropTypes } from "../../../../utils/data";
+import { ingredientPropTypes } from "../../../../utils/types";
 import { useDrag } from "react-dnd";
 import { useDispatch, useSelector } from "react-redux";
 import { setCurrentIngredient } from "../../../../services/slices/ingredients.slice";

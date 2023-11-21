@@ -1,3 +1,5 @@
+import { getCookie } from "./cookies";
+
 const BASE_URL = "https://norma.nomoreparties.space/api";
 
 class Api {
@@ -45,6 +47,16 @@ class Api {
       method: "POST",
       headers: this._headers,
       body: JSON.stringify({ email: email, password: password }),
+    });
+  }
+
+  getUser() {
+    return this._request("/auth/user", {
+      method: "GET",
+      headers: {
+        ...this._headers,
+        Authorization: getCookie("token"),
+      },
     });
   }
 

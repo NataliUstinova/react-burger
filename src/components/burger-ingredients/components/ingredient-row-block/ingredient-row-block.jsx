@@ -2,7 +2,7 @@ import ingredientRowBlockStyles from "./ingredient-row-block.module.css";
 import Ingredient from "../ingredient/ingredient";
 import { forwardRef } from "react";
 import PropTypes from "prop-types";
-import { ingredientPropTypes } from "../../../../utils/data";
+import { ingredientPropTypes } from "../../../../utils/types";
 const IngredientsRowBlock = forwardRef(({ title, ingredients }, ref) => {
   return (
     <div ref={ref} className={ingredientRowBlockStyles.container}>
