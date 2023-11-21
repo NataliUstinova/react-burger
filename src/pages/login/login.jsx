@@ -1,44 +1,64 @@
 import React from "react";
 import styles from "./login.module.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Button,
   Input,
 } from "@ya.praktikum/react-developer-burger-ui-components";
+import useValidation from "../../hooks/useValidation";
+import { api } from "../../utils/api";
 
 const Login = () => {
-  const [value, setValue] = React.useState("");
-  const handleChange = (e) => {
-    setValue(e.target.value);
-  };
+  const { values, errors, handleInputChange, isDisabled } =
+    useValidation("form");
+  const navigate = useNavigate();
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    api
+      .login(values.email, values.password)
+      .then((res) => {
+        console.log(res);
+        if (res.success) {
+          navigate("/profile");
+        }
+      })
+      .catch(console.error);
+  }
+
   return (
-    <div className={styles.container}>
+    <form className={`${styles.container} form`} onSubmit={handleSubmit}>
       <h1 className="text text_type_main-medium">Вход</h1>
       <Input
         type="email"
         placeholder="Email"
-        value={value}
-        onChange={(e) => handleChange(e)}
-        name={"password"}
-        error={false}
-        errorText={"Ошибка"}
+        value={values.email || ""}
+        onChange={(e) => handleInputChange(e)}
+        name={"email"}
+        error={!!errors.email}
+        errorText={errors.email}
         size={"default"}
         extraClass="mt-6 mb-6"
       />
       <Input
         type="password"
         placeholder="Пароль"
-        value={value}
-        onChange={(e) => handleChange(e)}
+        value={values.password || ""}
+        onChange={(e) => handleInputChange(e)}
         icon={"ShowIcon"}
         onIconClick={() => {}}
         name={"password"}
-        error={false}
-        errorText={"Ошибка"}
+        error={!!errors.password}
+        errorText={errors.password}
         size={"default"}
         extraClass="mb-6"
       />
-      <Button type="primary" size="medium" htmlType="submit">
+      <Button
+        type="primary"
+        size="medium"
+        htmlType="submit"
+        disabled={!isDisabled}
+      >
         Войти
       </Button>
 
@@ -60,7 +80,7 @@ const Login = () => {
           Восстановить пароль
         </Link>
       </p>
-    </div>
+    </form>
   );
 };
 

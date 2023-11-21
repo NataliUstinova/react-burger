@@ -32,6 +32,22 @@ class Api {
     });
   }
 
+  register(email, password, name) {
+    return this._request("/auth/register", {
+      method: "POST",
+      headers: this._headers,
+      body: JSON.stringify({ email: email, password: password, name: name }),
+    });
+  }
+
+  login(email, password) {
+    return this._request("/auth/login", {
+      method: "POST",
+      headers: this._headers,
+      body: JSON.stringify({ email: email, password: password }),
+    });
+  }
+
   resetPassword(email) {
     return this._request("/password-reset", {
       method: "POST",
