@@ -15,8 +15,7 @@ const ProtectedRouteElement = ({ element }) => {
   const currentPage = useLocation().pathname;
 
   const init = async () => {
-    await getCookie("token");
-    if (getCookie("token")) {
+    if (getCookie("token") || getCookie("refreshToken")) {
       dispatch(setUserIsAuth(true));
       await getUserData();
     }

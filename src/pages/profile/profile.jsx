@@ -6,18 +6,12 @@ import useValidation from "../../hooks/useValidation";
 import { setUserEmail, setUserName } from "../../services/slices/user.slice";
 import { useDispatch, useSelector } from "react-redux";
 import Nav from "./nav/nav";
+import useAuth from "../../utils/auth";
 
 const Profile = () => {
+  const { getUserData } = useAuth();
   useEffect(() => {
-    api
-      .getUser()
-      .then((res) => {
-        if (res.success) {
-          dispatch(setUserName(res.user.name));
-          dispatch(setUserEmail(res.user.email));
-        }
-      })
-      .catch(console.error);
+    getUserData();
   }, []);
   const [serverResponse, setServerResponse] = React.useState("");
 

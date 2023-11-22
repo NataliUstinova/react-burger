@@ -60,6 +60,16 @@ class Api {
     });
   }
 
+  refreshToken() {
+    return this._request("/auth/token", {
+      method: "POST",
+      headers: {
+        ...this._headers,
+      },
+      body: JSON.stringify({ token: getCookie("refreshToken") }),
+    });
+  }
+
   logout() {
     return this._request("/auth/logout", {
       method: "POST",
