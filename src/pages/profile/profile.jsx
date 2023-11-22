@@ -1,9 +1,16 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import profileStyles from "./profile.module.css";
 import { api } from "../../utils/api";
-import { Input } from "@ya.praktikum/react-developer-burger-ui-components";
+import {
+  Button,
+  Input,
+} from "@ya.praktikum/react-developer-burger-ui-components";
 import useValidation from "../../hooks/useValidation";
-import { setUserEmail, setUserName } from "../../services/slices/user.slice";
+import {
+  setUserEmail,
+  setUserName,
+  setUserPassword,
+} from "../../services/slices/user.slice";
 import { useDispatch, useSelector } from "react-redux";
 import Nav from "./nav/nav";
 import useAuth from "../../utils/auth";
@@ -13,7 +20,9 @@ const Profile = () => {
   useEffect(() => {
     getUserData();
   }, []);
-  const [serverResponse, setServerResponse] = React.useState("");
+
+  const [serverResponse, setServerResponse] = useState("");
+  const [editMode, setEditMode] = useState(false);
 
   const passwordRef = useRef(null);
   const emailRef = useRef(null);
@@ -22,16 +31,47 @@ const Profile = () => {
   const { values, setValues, errors, handleInputChange } =
     useValidation("form");
 
-  const { email, password, name } = useSelector((store) => store.user);
+  const {
+    email: initialEmail,
+    password: initialPassword,
+    name: initialName,
+  } = useSelector((store) => store.user);
 
   useEffect(() => {
-    setValues({ name: name, password: password, email: email });
-  }, [email, password, name]);
+    setValues({
+      name: editMode ? values.name : initialName,
+      password: editMode ? values.password : initialPassword,
+      email: editMode ? values.email : initialEmail,
+    });
+  }, [editMode, initialName, initialPassword, initialEmail]);
 
   const dispatch = useDispatch();
-  function handleSubmit(e) {
+
+  const handleEditClick = (ref) => {
+    ref?.current?.focus();
+    setEditMode(true);
+  };
+
+  const handleCancelClick = () => {
+    setValues({
+      name: initialName,
+      password: initialPassword,
+      email: initialEmail,
+    });
+    setEditMode(false);
+  };
+
+  const handleSubmit = (e) => {
     setServerResponse("");
     e.preventDefault();
+    if (
+      values.password === initialPassword &&
+      values.email === initialEmail &&
+      values.name === initialName
+    ) {
+      alert("Нет изменений");
+      return;
+    }
     api
       .updateUser({
         email: values.email,
@@ -43,16 +83,20 @@ const Profile = () => {
         if (res.success) {
           dispatch(setUserName(res.user.name));
           dispatch(setUserEmail(res.user.email));
+          dispatch(setUserPassword(values.password));
           setServerResponse("Данные успешно обновлены");
+          setEditMode(false);
         }
       })
-      .catch((err) => alert(err))
+      .catch((err) => {
+        alert(err);
+      })
       .finally(() => {
         setTimeout(() => {
           setServerResponse("");
         }, 5000);
       });
-  }
+  };
 
   return (
     <div className={profileStyles.container}>
@@ -69,16 +113,11 @@ const Profile = () => {
           errorText={errors.name}
           size={"default"}
           extraClass="mb-6"
+          onFocus={handleEditClick}
           onChange={(e) => handleInputChange(e)}
           onIconClick={() => {
-            nameRef.current.focus();
+            handleEditClick(nameRef);
           }}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              handleSubmit(e);
-            }
-          }}
-          onBlur={(e) => handleSubmit(e)}
         />
         <Input
           type="email"
@@ -87,19 +126,14 @@ const Profile = () => {
           value={values.email || ""}
           name="email"
           icon={"EditIcon"}
-          onIconClick={() => {
-            emailRef.current.focus();
-          }}
           error={!!errors.email}
           errorText={errors.email}
           size={"default"}
           extraClass="mb-6"
+          onFocus={handleEditClick}
           onChange={(e) => handleInputChange(e)}
-          onBlur={(e) => handleSubmit(e)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              handleSubmit(e);
-            }
+          onIconClick={() => {
+            handleEditClick(emailRef);
           }}
         />
         <Input
@@ -113,17 +147,24 @@ const Profile = () => {
           size={"default"}
           extraClass="mb-6"
           onChange={(e) => handleInputChange(e)}
-          onBlur={(e) => handleSubmit(e)}
           icon={"EditIcon"}
+          onFocus={handleEditClick}
           onIconClick={() => {
-            passwordRef.current.focus();
-          }}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              handleSubmit(e);
-            }
+            handleEditClick(passwordRef);
           }}
         />
+        {editMode && (
+          <div className={profileStyles.buttons}>
+            <Button
+              htmlType="button"
+              type="secondary"
+              onClick={handleCancelClick}
+            >
+              Cancel
+            </Button>
+            <Button htmlType="submit">Save</Button>
+          </div>
+        )}
         <p className="pt-4 text_color_inactive text_type_main-small">
           {serverResponse}
         </p>

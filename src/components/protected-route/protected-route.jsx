@@ -14,10 +14,10 @@ const ProtectedRouteElement = ({ element }) => {
   const dispatch = useDispatch();
   const currentPage = useLocation().pathname;
 
-  const init = async () => {
+  const init = () => {
     if (getCookie("token") || getCookie("refreshToken")) {
       dispatch(setUserIsAuth(true));
-      await getUserData();
+      getUserData();
     }
   };
 
