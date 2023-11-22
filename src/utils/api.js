@@ -34,7 +34,7 @@ class Api {
     });
   }
 
-  register(email, password, name) {
+  register({ email, password, name }) {
     return this._request("/auth/register", {
       method: "POST",
       headers: this._headers,
@@ -57,6 +57,27 @@ class Api {
         ...this._headers,
         Authorization: getCookie("token"),
       },
+    });
+  }
+
+  logout() {
+    return this._request("/auth/logout", {
+      method: "POST",
+      headers: {
+        ...this._headers,
+      },
+      body: JSON.stringify({ token: getCookie("refreshToken") }),
+    });
+  }
+
+  updateUser({ name, email, password }) {
+    return this._request("/auth/user", {
+      method: "PATCH",
+      headers: {
+        ...this._headers,
+        Authorization: getCookie("token"),
+      },
+      body: JSON.stringify({ name: name, email: email, password: password }),
     });
   }
 

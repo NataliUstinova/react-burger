@@ -1,7 +1,44 @@
 .container {
   height: calc(100% - 210px);
   display: flex;
+  flex-direction: row;
+  align-items: start;
+  justify-content: center;
+  gap: 60px;
+  padding-top: 60px;
+}
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  align-items: start;
+  justify-content: start;
+  max-width: 320px;
+}
+
+.formContainer {
+  display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: start;
+  max-width: 480px;
+}
+.link {
+  text-decoration: none;
+  height: 30px;
+}
+.link:hover {
+  opacity: 0.8;
+}
+
+.button {
+  height: 30px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+}
+.button:hover {
+  opacity: 0.8;
 }

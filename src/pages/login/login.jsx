@@ -18,7 +18,7 @@ import { useDispatch } from "react-redux";
 import { setCookie } from "../../utils/cookies";
 
 const Login = () => {
-  const { values, errors, handleInputChange, isDisabled } =
+  const { values, setValues, errors, handleInputChange, isDisabled } =
     useValidation("form");
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -28,7 +28,6 @@ const Login = () => {
     api
       .login(values.email, values.password)
       .then((res) => {
-        console.log(res);
         if (res.success) {
           setCookie("refreshToken", res.refreshToken, { expires: null });
           setCookie("token", decodeURIComponent(res.accessToken), {
@@ -39,11 +38,12 @@ const Login = () => {
           dispatch(setUserIsAuth(true));
           dispatch(setUserToken(res.accessToken));
           dispatch(setUserRefreshToken(res.refreshToken));
-
           navigate("/profile");
         }
       })
-      .catch(console.error);
+      .catch((err) => {
+        alert(err);
+      });
   }
 
   return (
@@ -61,12 +61,17 @@ const Login = () => {
         extraClass="mt-6 mb-6"
       />
       <Input
-        type="password"
+        type={values.showPassword ? "text" : "password"}
         placeholder="Пароль"
         value={values.password || ""}
         onChange={(e) => handleInputChange(e)}
         icon={"ShowIcon"}
-        onIconClick={() => {}}
+        onIconClick={() => {
+          setValues((prevValues) => ({
+            ...prevValues,
+            showPassword: !prevValues.showPassword,
+          }));
+        }}
         name={"password"}
         error={!!errors.password}
         errorText={errors.password}

@@ -15,6 +15,7 @@ import Register from "../../pages/register/register";
 import ForgotPassword from "../../pages/forgot-password/forgot-password";
 import ResetPassword from "../../pages/reset-password/reset-password";
 import Ingredient from "../../pages/ingredient/ingredient";
+import Orders from "../../pages/profile/orders/orders";
 const IngredientDetails = lazy(() =>
   import("../ingredient-details/ingredient-details")
 );
@@ -52,7 +53,9 @@ function App() {
         <Route path="/register" element={<Register />} />
 
         <Route path="/order-feed" element={<OrderFeed />} />
+
         <Route path="/profile" element={<Profile />} />
+        <Route path="/profile/orders" element={<Orders />} />
 
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
