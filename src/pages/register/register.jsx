@@ -1,51 +1,21 @@
 import React from "react";
 import styles from "./register.module.css";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import {
   Button,
   Input,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import useValidation from "../../hooks/useValidation";
-import { api } from "../../utils/api";
-import { setCookie } from "../../utils/cookies";
-import {
-  setUserEmail,
-  setUserIsAuth,
-  setUserPassword,
-  setUserRefreshToken,
-  setUserToken,
-} from "../../services/slices/user.slice";
-import { useDispatch } from "react-redux";
+import useAuth from "../../utils/auth";
 
 const Register = () => {
   const { values, setValues, errors, handleInputChange, isDisabled } =
     useValidation("form");
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
+
+  const { handleRegister } = useAuth();
   function handleSubmit(e) {
     e.preventDefault();
-    api
-      .register({
-        email: values.email,
-        password: values.password,
-        name: values.name,
-      })
-      .then((res) => {
-        console.log(res);
-        if (res.success) {
-          setCookie("refreshToken", res.refreshToken, { expires: null });
-          setCookie("token", decodeURIComponent(res.accessToken), {
-            expires: 20 * 60 * 1000,
-          });
-          dispatch(setUserEmail(values.email));
-          dispatch(setUserPassword(values.password));
-          dispatch(setUserIsAuth(true));
-          dispatch(setUserToken(res.accessToken));
-          dispatch(setUserRefreshToken(res.refreshToken));
-          navigate("/");
-        }
-      })
-      .catch((err) => alert(err));
+    handleRegister(values.email, values.password, values.name);
   }
 
   return (

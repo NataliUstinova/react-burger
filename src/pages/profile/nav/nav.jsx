@@ -1,37 +1,15 @@
 import React, { useEffect } from "react";
 import profileStyles from "../profile.module.css";
-import { NavLink, useNavigate } from "react-router-dom";
-import { api } from "../../../utils/api";
-import { deleteCookie } from "../../../utils/cookies";
-import {
-  setUserEmail,
-  setUserIsAuth,
-  setUserName,
-  setUserPassword,
-} from "../../../services/slices/user.slice";
-import { useDispatch } from "react-redux";
+import { NavLink } from "react-router-dom";
+import useAuth from "../../../utils/auth";
 
 const Nav = () => {
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const { handleLogout } = useAuth();
   const [isOrdersActive, setIsOrdersActive] = React.useState(false);
 
   useEffect(() => {
     setIsOrdersActive(window.location.pathname === "/profile/orders");
   }, []);
-  function handleLogout() {
-    api.logout().then((res) => {
-      console.log(res);
-      if (res.success) {
-        deleteCookie("token");
-        dispatch(setUserEmail(""));
-        dispatch(setUserName(""));
-        dispatch(setUserIsAuth(false));
-        dispatch(setUserPassword(""));
-        navigate("/login");
-      }
-    });
-  }
 
   return (
     <nav className={profileStyles.nav}>
