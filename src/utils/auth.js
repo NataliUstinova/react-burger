@@ -1,6 +1,7 @@
 import { api } from "./api";
-import { deleteCookie, setCookie } from "./cookies";
+import { deleteCookie, getCookie, setCookie } from "./cookies";
 import {
+  resetRequestSent,
   setPreLoginLocation,
   setUserEmail,
   setUserIsAuth,
@@ -81,10 +82,60 @@ const useAuth = () => {
       .catch((err) => alert(err));
   }
 
+  function getUserData() {
+    api
+      .getUser()
+      .then((res) => {
+        if (res.success) {
+          dispatch(setUserEmail(res.user.email));
+          dispatch(setUserName(res.user.name));
+          dispatch(setUserIsAuth(true));
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  function resetPassword(email) {
+    api
+      .resetPassword(email)
+      .then((res) => {
+        if (res.success) {
+          dispatch(resetRequestSent(true));
+          navigate("/reset-password");
+        }
+      })
+      .catch(console.error);
+  }
+
+  function confirmResetPassword(password, token) {
+    api
+      .confirmPasswordReset(password, token)
+      .then((res) => {
+        console.log(res);
+        if (res.success) {
+          alert(res.message);
+          navigate("/profile");
+        }
+      })
+      .catch((err) => alert(err));
+  }
+
+  function authCheck() {
+    if (getCookie("token")) {
+      navigate(-1);
+    }
+  }
+
   return {
     handleLogout,
     handleLogin,
     handleRegister,
+    resetPassword,
+    getUserData,
+    authCheck,
+    confirmResetPassword,
   };
 };
 

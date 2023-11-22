@@ -1,4 +1,4 @@
-import React, { lazy, Suspense } from "react";
+import React, { lazy, Suspense, useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
 import appStyles from "./app.module.css";
 import Main from "../../pages/main/main";
@@ -17,6 +17,9 @@ import ResetPassword from "../../pages/reset-password/reset-password";
 import Ingredient from "../../pages/ingredient/ingredient";
 import Orders from "../../pages/profile/orders/orders";
 import ProtectedRoute from "../protected-route/protected-route";
+import { getCookie } from "../../utils/cookies";
+import { setUserIsAuth } from "../../services/slices/user.slice";
+import useAuth from "../../utils/auth";
 const IngredientDetails = lazy(() =>
   import("../ingredient-details/ingredient-details")
 );
@@ -25,12 +28,26 @@ const OrderDetails = lazy(() => import("../order-details/order-details"));
 function App() {
   const { isOpen, modalType } = useSelector((state) => state.modal);
   const dispatch = useDispatch();
+  const { getUserData } = useAuth();
   const handleModalClose = () => {
     dispatch(closeModal());
     modalType === modalTypes.INGREDIENT
       ? dispatch(resetCurrentIngredient())
       : dispatch(resetOrder());
   };
+
+  const init = async () => {
+    await getCookie("token");
+    if (getCookie("token")) {
+      dispatch(setUserIsAuth(true));
+      await getUserData();
+    }
+  };
+
+  useEffect(() => {
+    init();
+  }, []);
+
   return (
     <div className={appStyles.container}>
       <AppHeader />

@@ -1,15 +1,16 @@
 import React, { useEffect } from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { api } from "../../utils/api";
 import { getCookie } from "../../utils/cookies";
 import {
   setPreLoginLocation,
   setUserIsAuth,
 } from "../../services/slices/user.slice";
+import useAuth from "../../utils/auth";
 
 const ProtectedRouteElement = ({ element }) => {
   const { isAuth } = useSelector((state) => state.user);
+  const { getUserData } = useAuth();
   const dispatch = useDispatch();
   const currentPage = useLocation().pathname;
 
@@ -17,15 +18,7 @@ const ProtectedRouteElement = ({ element }) => {
     await getCookie("token");
     if (getCookie("token")) {
       dispatch(setUserIsAuth(true));
-      await api
-        .getUser()
-        .then((res) => {
-          if (res.success) {
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      await getUserData();
     }
   };
 

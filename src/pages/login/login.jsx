@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styles from "./login.module.css";
 import { Link } from "react-router-dom";
 import {
@@ -11,12 +11,16 @@ import useAuth from "../../utils/auth";
 const Login = () => {
   const { values, setValues, errors, handleInputChange, isDisabled } =
     useValidation("form");
+  const { handleLogin, authCheck } = useAuth();
 
-  const { handleLogin } = useAuth();
   function handleSubmit(e) {
     e.preventDefault();
     handleLogin(values.email, values.password);
   }
+
+  useEffect(() => {
+    authCheck();
+  }, []);
 
   return (
     <form className={`${styles.container} form`} onSubmit={handleSubmit}>

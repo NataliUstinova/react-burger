@@ -8,6 +8,7 @@ const initialState = {
   token: "",
   refreshToken: "",
   preLoginLocation: "/",
+  resetRequestSent: false,
   isAuth: false,
 };
 
@@ -44,6 +45,9 @@ export const userSlice = createSlice({
     setPreLoginLocation: (state, action) => {
       state.preLoginLocation = action.payload;
     },
+    resetRequestSent: (state, action) => {
+      state.resetRequestSent = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -72,6 +76,7 @@ export const {
   setUserToken,
   setUserRefreshToken,
   setPreLoginLocation,
+  resetRequestSent,
 } = userSlice.actions;
 
 export default userSlice.reducer;

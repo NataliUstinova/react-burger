@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styles from "./reset-password.module.css";
 import {
   Button,
@@ -6,36 +6,40 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { Link, useNavigate } from "react-router-dom";
 import useValidation from "../../hooks/useValidation";
-import { api } from "../../utils/api";
+import useAuth from "../../utils/auth";
+import { useSelector } from "react-redux";
 
 const ResetPassword = () => {
-  const { values, errors, handleInputChange, isDisabled } =
+  const { values, setValues, errors, handleInputChange, isDisabled } =
     useValidation("form");
+  const { confirmResetPassword, authCheck } = useAuth();
+  const { resetRequestSent } = useSelector((store) => store.user);
   const navigate = useNavigate();
-
   function handleSubmit(e) {
     e.preventDefault();
-    api
-      .confirmPasswordReset(values.password, values.token)
-      .then((res) => {
-        console.log(res);
-        if (res.success) {
-          navigate("/profile");
-        }
-      })
-      .catch(console.error);
+    confirmResetPassword(values.password, values.token.trim());
   }
+
+  useEffect(() => {
+    authCheck();
+    !resetRequestSent && navigate("/forgot-password");
+  }, []);
 
   return (
     <form className={`${styles.container} form`} onSubmit={handleSubmit}>
       <h1 className="text text_type_main-medium">Восстановление пароля</h1>
       <Input
-        type="password"
+        type={values.showPassword ? "text" : "password"}
         placeholder="Введите новый пароль"
         value={values.password || ""}
         onChange={(e) => handleInputChange(e)}
         icon={"ShowIcon"}
-        onIconClick={() => {}}
+        onIconClick={() => {
+          setValues((prevValues) => ({
+            ...prevValues,
+            showPassword: !prevValues.showPassword,
+          }));
+        }}
         name={"password"}
         error={!!errors.password}
         errorText={errors.password}

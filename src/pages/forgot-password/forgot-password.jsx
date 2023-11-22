@@ -1,29 +1,26 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styles from "./forgot-password.module.css";
 import {
   Button,
   Input,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import useValidation from "../../hooks/useValidation";
-import { api } from "../../utils/api";
+import useAuth from "../../utils/auth";
 
 const ForgotPassword = () => {
   const { values, errors, handleInputChange, isDisabled } =
     useValidation("form");
-  const navigate = useNavigate();
+  const { authCheck, resetPassword } = useAuth();
 
   function handleSubmit(e) {
     e.preventDefault();
-    api
-      .resetPassword(values.email)
-      .then((res) => {
-        if (res.success) {
-          navigate("/reset-password");
-        }
-      })
-      .catch(console.error);
+    resetPassword(values.email);
   }
+
+  useEffect(() => {
+    authCheck();
+  }, []);
 
   return (
     <form className={`${styles.container} form`} onSubmit={handleSubmit}>
