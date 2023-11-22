@@ -90,7 +90,6 @@ const useAuth = () => {
           setCookie("token", decodeURIComponent(res.accessToken), {
             expires: 20 * 60 * 1000,
           });
-          getUserData();
         }
       })
       .catch((err) => {

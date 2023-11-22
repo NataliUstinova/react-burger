@@ -13,10 +13,27 @@ class Api {
     return res.ok ? result : Promise.reject(result.message);
   }
 
-  _request(endpoint, options) {
-    return fetch(`${this._baseUrl}${endpoint}`, options).then(
-      this._checkServerResponse
-    );
+  async _request(endpoint, options) {
+    try {
+      const response = await fetch(`${this._baseUrl}${endpoint}`, options);
+      return await this._checkServerResponse(response);
+    } catch (error) {
+      if (error === "jwt expired") {
+        try {
+          await this.refreshToken();
+          options.headers.Authorization = getCookie("token");
+          const retryResponse = await fetch(
+            `${this._baseUrl}${endpoint}`,
+            options
+          );
+          return await this._checkServerResponse(retryResponse);
+        } catch (refreshError) {
+          console.error("Token refresh failed:", refreshError);
+          return Promise.reject("Token refresh failed");
+        }
+      }
+      return Promise.reject(error);
+    }
   }
 
   fetchIngredients() {
