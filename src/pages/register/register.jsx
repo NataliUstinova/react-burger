@@ -42,7 +42,7 @@ const Register = () => {
           dispatch(setUserIsAuth(true));
           dispatch(setUserToken(res.accessToken));
           dispatch(setUserRefreshToken(res.refreshToken));
-          navigate("/profile");
+          navigate("/");
         }
       })
       .catch((err) => alert(err));

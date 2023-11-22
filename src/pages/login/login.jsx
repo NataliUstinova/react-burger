@@ -38,7 +38,7 @@ const Login = () => {
           dispatch(setUserIsAuth(true));
           dispatch(setUserToken(res.accessToken));
           dispatch(setUserRefreshToken(res.refreshToken));
-          navigate("/profile");
+          navigate("/");
         }
       })
       .catch((err) => {
