@@ -1,18 +1,14 @@
-import React, { useEffect, useMemo, useRef } from "react";
+import React, { useMemo, useRef } from "react";
 import burgerIngredientsStyles from "./burger-ingredients.module.css";
 import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
 import IngredientsRowBlock from "./components/ingredient-row-block/ingredient-row-block";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchIngredients } from "../../services/slices/ingredients.slice";
 import { setCurrentTab } from "../../services/slices/tabs.slice";
 import { useInView } from "react-intersection-observer";
 
 const BurgerIngredients = () => {
   const dispatch = useDispatch();
   const { currentTab } = useSelector((state) => state.tabs);
-  useEffect(() => {
-    dispatch(fetchIngredients());
-  }, [dispatch]);
 
   const { ingredients, isLoading } = useSelector((state) => state.ingredients);
 

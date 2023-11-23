@@ -8,7 +8,10 @@ import AppHeader from "../app-header/app-header";
 import Modal from "../modal/modal";
 import { useDispatch, useSelector } from "react-redux";
 import { closeModal, modalTypes } from "../../services/slices/modal.slice";
-import { resetCurrentIngredient } from "../../services/slices/ingredients.slice";
+import {
+  fetchIngredients,
+  resetCurrentIngredient,
+} from "../../services/slices/ingredients.slice";
 import { resetOrder } from "../../services/slices/order.slice";
 import Login from "../../pages/login/login";
 import Register from "../../pages/register/register";
@@ -47,7 +50,8 @@ function App() {
 
   useEffect(() => {
     init();
-  }, []);
+    dispatch(fetchIngredients());
+  }, [dispatch]);
 
   return (
     <div className={appStyles.container}>
