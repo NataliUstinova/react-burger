@@ -6,6 +6,8 @@ class Api {
   constructor({ baseUrl, headers }) {
     this._baseUrl = baseUrl;
     this._headers = headers;
+    this._requestQueue = [];
+    this._isRefreshing = false;
   }
 
   async _checkServerResponse(res) {
@@ -19,17 +21,30 @@ class Api {
       return await this._checkServerResponse(response);
     } catch (error) {
       if (error === "jwt expired") {
-        try {
-          await this.refreshToken();
-          options.headers.Authorization = getCookie("token");
-          const retryResponse = await fetch(
-            `${this._baseUrl}${endpoint}`,
-            options
-          );
-          return await this._checkServerResponse(retryResponse);
-        } catch (refreshError) {
-          console.error("Token refresh failed:", refreshError);
-          return Promise.reject("Token refresh failed");
+        if (!this._isRefreshing) {
+          this._isRefreshing = true;
+          try {
+            await this.refreshToken();
+            options.headers.Authorization = getCookie("token");
+            const retryResponse = await fetch(
+              `${this._baseUrl}${endpoint}`,
+              options
+            );
+            return await this._checkServerResponse(retryResponse);
+          } catch (refreshError) {
+            console.error("Token refresh failed:", refreshError);
+            return Promise.reject("Token refresh failed");
+          } finally {
+            this._isRefreshing = false;
+            this._requestQueue.forEach((queuedRequest) => queuedRequest());
+            this._requestQueue = [];
+          }
+        } else {
+          return new Promise((resolve) => {
+            this._requestQueue.push(() => {
+              resolve(this._request(endpoint, options));
+            });
+          });
         }
       }
       return Promise.reject(error);
