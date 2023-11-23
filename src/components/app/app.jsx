@@ -1,5 +1,5 @@
 import React, { lazy, Suspense, useEffect } from "react";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import appStyles from "./app.module.css";
 import Main from "../../pages/main/main";
 import OrderFeed from "../../pages/order-feed/order-feed";
@@ -29,10 +29,11 @@ function App() {
   const { isOpen, modalType } = useSelector((state) => state.modal);
   const dispatch = useDispatch();
   const { getUserData } = useAuth();
+  const navigate = useNavigate();
   const handleModalClose = () => {
     dispatch(closeModal());
     modalType === modalTypes.INGREDIENT
-      ? dispatch(resetCurrentIngredient())
+      ? dispatch(resetCurrentIngredient()) && navigate("/")
       : dispatch(resetOrder());
   };
 

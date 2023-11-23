@@ -1,12 +1,35 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styles from "./ingredient.module.css";
 import { useParams } from "react-router-dom";
+import IngredientDetails from "../../components/ingredient-details/ingredient-details";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchIngredients,
+  setCurrentIngredient,
+} from "../../services/slices/ingredients.slice";
 
 const Ingredient = () => {
   const { id } = useParams();
+  const dispatch = useDispatch();
+  const { ingredients, currentIngredient } = useSelector(
+    (state) => state.ingredients
+  );
+
+  useEffect(() => {
+    dispatch(fetchIngredients());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (ingredients?.length !== 0) {
+      dispatch(
+        setCurrentIngredient(ingredients?.find((item) => item._id === id))
+      );
+    }
+  }, [id, ingredients, dispatch]);
+
   return (
     <div className={styles.ingredientContainer}>
-      <p>Страница ингредиента {id}</p>
+      {currentIngredient?.name && <IngredientDetails />}
     </div>
   );
 };

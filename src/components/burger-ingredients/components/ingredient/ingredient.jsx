@@ -10,11 +10,13 @@ import { useDrag } from "react-dnd";
 import { useDispatch, useSelector } from "react-redux";
 import { setCurrentIngredient } from "../../../../services/slices/ingredients.slice";
 import { modalTypes, openModal } from "../../../../services/slices/modal.slice";
+import { useNavigate } from "react-router-dom";
 
 const Ingredient = ({ ingredient }) => {
   const { image, name, price, _id } = ingredient;
   const dispatch = useDispatch();
   const { constructorIngredients } = useSelector((state) => state.ingredients);
+  const navigate = useNavigate();
 
   const counter = useMemo(
     () => constructorIngredients.filter((item) => item._id === _id).length,
@@ -24,6 +26,7 @@ const Ingredient = ({ ingredient }) => {
   function handleClick() {
     dispatch(setCurrentIngredient(ingredient));
     dispatch(openModal({ modalType: modalTypes.INGREDIENT }));
+    navigate(`/ingredients/${_id}`, { replace: true });
   }
 
   const [{ opacity }, dragRef] = useDrag({
