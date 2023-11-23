@@ -82,21 +82,6 @@ const useAuth = () => {
       .catch((err) => alert(err));
   }
 
-  function refreshToken() {
-    api
-      .refreshToken()
-      .then((res) => {
-        if (res.success) {
-          setCookie("token", decodeURIComponent(res.accessToken), {
-            expires: 20 * 60 * 1000,
-          });
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }
-
   function getUserData() {
     api
       .getUser()
@@ -109,7 +94,6 @@ const useAuth = () => {
       })
       .catch((err) => {
         dispatch(setUserIsAuth(false));
-        refreshToken();
         console.log(err);
       });
   }

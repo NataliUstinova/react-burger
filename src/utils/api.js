@@ -1,4 +1,4 @@
-import { getCookie } from "./cookies";
+import { getCookie, setCookie } from "./cookies";
 
 const BASE_URL = "https://norma.nomoreparties.space/api";
 
@@ -6,8 +6,6 @@ class Api {
   constructor({ baseUrl, headers }) {
     this._baseUrl = baseUrl;
     this._headers = headers;
-    this._requestQueue = [];
-    this._isRefreshing = false;
   }
 
   async _checkServerResponse(res) {
@@ -15,41 +13,49 @@ class Api {
     return res.ok ? result : Promise.reject(result.message);
   }
 
-  async _request(endpoint, options) {
-    try {
-      const response = await fetch(`${this._baseUrl}${endpoint}`, options);
-      return await this._checkServerResponse(response);
-    } catch (error) {
-      if (error === "jwt expired") {
-        if (!this._isRefreshing) {
-          this._isRefreshing = true;
-          try {
-            await this.refreshToken();
-            options.headers.Authorization = getCookie("token");
-            const retryResponse = await fetch(
-              `${this._baseUrl}${endpoint}`,
-              options
-            );
-            return await this._checkServerResponse(retryResponse);
-          } catch (refreshError) {
-            console.error("Token refresh failed:", refreshError);
-            return Promise.reject("Token refresh failed");
-          } finally {
-            this._isRefreshing = false;
-            this._requestQueue.forEach((queuedRequest) => queuedRequest());
-            this._requestQueue = [];
-          }
-        } else {
-          return new Promise((resolve) => {
-            this._requestQueue.push(() => {
-              resolve(this._request(endpoint, options));
-            });
-          });
-        }
-      }
-      return Promise.reject(error);
-    }
+  _request(endpoint, options) {
+    return fetch(`${this._baseUrl}${endpoint}`, options).then(
+      this._checkServerResponse
+    );
   }
+
+  saveTokens = (refreshToken, accessToken) => {
+    setCookie("accessToken", accessToken);
+    localStorage.setItem("refreshToken", refreshToken);
+  };
+
+  refreshTokenRequest = () => {
+    return fetch(`${this._baseUrl}/auth/token`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+      },
+      body: JSON.stringify({
+        token: localStorage.getItem("refreshToken"),
+      }),
+    }).then(this._checkServerResponse);
+  };
+
+  fetchWithRefresh = async (url, options) => {
+    try {
+      const res = await fetch(`${this._baseUrl}${url}`, options);
+
+      return await this._checkServerResponse(res);
+    } catch (err) {
+      if (err.message === "jwt expired") {
+        const { refreshToken, accessToken } = await this.refreshTokenRequest();
+        this.saveTokens(refreshToken, accessToken);
+
+        options.headers.authorization = accessToken;
+
+        const res = await fetch(`${this._baseUrl}${url}`, options);
+
+        return await this._checkServerResponse(res);
+      } else {
+        return Promise.reject(err);
+      }
+    }
+  };
 
   fetchIngredients() {
     return this._request("/ingredients", {
@@ -59,7 +65,7 @@ class Api {
   }
 
   postOrder(ingredientsIds) {
-    return this._request("/orders", {
+    return this.fetchWithRefresh("/orders", {
       method: "POST",
       headers: this._headers,
       body: JSON.stringify({ ingredients: ingredientsIds }),
@@ -83,7 +89,7 @@ class Api {
   }
 
   getUser() {
-    return this._request("/auth/user", {
+    return this.fetchWithRefresh("/auth/user", {
       method: "GET",
       headers: {
         ...this._headers,
@@ -92,18 +98,8 @@ class Api {
     });
   }
 
-  refreshToken() {
-    return this._request("/auth/token", {
-      method: "POST",
-      headers: {
-        ...this._headers,
-      },
-      body: JSON.stringify({ token: getCookie("refreshToken") }),
-    });
-  }
-
   logout() {
-    return this._request("/auth/logout", {
+    return this.fetchWithRefresh("/auth/logout", {
       method: "POST",
       headers: {
         ...this._headers,
@@ -113,7 +109,7 @@ class Api {
   }
 
   updateUser({ name, email, password }) {
-    return this._request("/auth/user", {
+    return this.fetchWithRefresh("/auth/user", {
       method: "PATCH",
       headers: {
         ...this._headers,
@@ -124,7 +120,7 @@ class Api {
   }
 
   resetPassword(email) {
-    return this._request("/password-reset", {
+    return this.fetchWithRefresh("/password-reset", {
       method: "POST",
       headers: this._headers,
       body: JSON.stringify({ email: email }),
@@ -132,7 +128,7 @@ class Api {
   }
 
   confirmPasswordReset(password, token) {
-    return this._request("/password-reset/reset", {
+    return this.fetchWithRefresh("/password-reset/reset", {
       method: "POST",
       headers: this._headers,
       body: JSON.stringify({ password: password, token: token }),

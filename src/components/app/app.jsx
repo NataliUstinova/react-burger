@@ -51,7 +51,7 @@ function App() {
   useEffect(() => {
     init();
     dispatch(fetchIngredients());
-  }, [dispatch]);
+  }, []);
 
   return (
     <div className={appStyles.container}>
