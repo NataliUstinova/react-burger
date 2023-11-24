@@ -1,5 +1,5 @@
 import { api } from "./api";
-import { deleteCookie, getCookie, setCookie } from "./cookies";
+import { deleteCookie, getCookie } from "./cookies";
 import {
   resetRequestSent,
   setPreLoginLocation,
@@ -22,8 +22,8 @@ const useAuth = () => {
     api.logout().then((res) => {
       console.log(res);
       if (res.success) {
-        deleteCookie("token");
-        deleteCookie("refreshToken");
+        deleteCookie("accessToken");
+        localStorage.removeItem("refreshToken");
         dispatch(setUserEmail(""));
         dispatch(setUserName(""));
         dispatch(setUserIsAuth(false));
@@ -39,10 +39,7 @@ const useAuth = () => {
       .login(email, password)
       .then((res) => {
         if (res.success) {
-          setCookie("refreshToken", res.refreshToken, { expires: null });
-          setCookie("token", decodeURIComponent(res.accessToken), {
-            expires: 20 * 60 * 1000,
-          });
+          api.saveTokens(res.refreshToken, res.accessToken);
           dispatch(setUserEmail(email));
           dispatch(setUserPassword(password));
           dispatch(setUserIsAuth(true));
@@ -66,10 +63,7 @@ const useAuth = () => {
       .then((res) => {
         console.log(res);
         if (res.success) {
-          setCookie("refreshToken", res.refreshToken, { expires: null });
-          setCookie("token", decodeURIComponent(res.accessToken), {
-            expires: 20 * 60 * 1000,
-          });
+          api.saveTokens(res.refreshToken, res.accessToken);
           dispatch(setUserEmail(email));
           dispatch(setUserPassword(password));
           dispatch(setUserName(name));
@@ -124,7 +118,7 @@ const useAuth = () => {
   }
 
   function authCheck() {
-    if (getCookie("token")) {
+    if (getCookie("accessToken")) {
       navigate(-1);
     }
   }

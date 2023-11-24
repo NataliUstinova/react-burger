@@ -39,7 +39,6 @@ class Api {
   fetchWithRefresh = async (url, options) => {
     try {
       const res = await fetch(`${this._baseUrl}${url}`, options);
-
       return await this._checkServerResponse(res);
     } catch (err) {
       if (err.message === "jwt expired") {
@@ -93,7 +92,7 @@ class Api {
       method: "GET",
       headers: {
         ...this._headers,
-        Authorization: getCookie("token"),
+        Authorization: getCookie("accessToken"),
       },
     });
   }
@@ -104,7 +103,7 @@ class Api {
       headers: {
         ...this._headers,
       },
-      body: JSON.stringify({ token: getCookie("refreshToken") }),
+      body: JSON.stringify({ token: localStorage.getItem("refreshToken") }),
     });
   }
 
@@ -113,7 +112,7 @@ class Api {
       method: "PATCH",
       headers: {
         ...this._headers,
-        Authorization: getCookie("token"),
+        Authorization: getCookie("accessToken"),
       },
       body: JSON.stringify({ name: name, email: email, password: password }),
     });
