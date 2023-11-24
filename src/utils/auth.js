@@ -119,6 +119,7 @@ const useAuth = () => {
 
   function authCheck() {
     if (getCookie("accessToken")) {
+      dispatch(setUserIsAuth(true));
       navigate(-1);
     }
   }
