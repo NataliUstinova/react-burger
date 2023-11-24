@@ -1,34 +1,24 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Navigate, useLocation } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { getCookie } from "../../utils/cookies";
-import {
-  setPreLoginLocation,
-  setUserIsAuth,
-} from "../../services/slices/user.slice";
-import useAuth from "../../utils/auth";
+import { useSelector } from "react-redux";
 
-const ProtectedRouteElement = ({ element }) => {
-  const { isAuth } = useSelector((state) => state.user);
-  const { getUserData } = useAuth();
-  const dispatch = useDispatch();
-  const currentPage = useLocation().pathname;
+export default function ProtectedRoute({ element, anonymous = false }) {
+  const isAuth = useSelector((store) => store.user.isAuth);
 
-  const init = () => {
-    if (getCookie("token") || getCookie("refreshToken")) {
-      dispatch(setUserIsAuth(true));
-      getUserData();
-    }
-  };
+  const location = useLocation();
+  const from = location.state?.from || "/";
+  // Если разрешен неавторизованный доступ, а пользователь авторизован...
+  if (anonymous && isAuth) {
+    // ...то отправляем его на предыдущую страницу
+    return <Navigate to={from} />;
+  }
 
-  useEffect(() => {
-    init();
-  }, []);
+  // Если требуется авторизация, а пользователь не авторизован...
+  if (!anonymous && !isAuth) {
+    // ...то отправляем его на страницу логин
+    return <Navigate to="/login" state={{ from: location }} />;
+  }
 
-  useEffect(() => {
-    dispatch(setPreLoginLocation(currentPage));
-  }, [currentPage]);
-
-  return isAuth ? element : <Navigate to="/login" />;
-};
-export default ProtectedRouteElement;
+  // Если все ок, то рендерим внутреннее содержимое
+  return element;
+}

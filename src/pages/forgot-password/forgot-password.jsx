@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import styles from "./forgot-password.module.css";
 import {
   Button,
@@ -11,16 +11,12 @@ import useAuth from "../../utils/auth";
 const ForgotPassword = () => {
   const { values, errors, handleInputChange, isDisabled } =
     useValidation("form");
-  const { authCheck, resetPassword } = useAuth();
+  const { resetPassword } = useAuth();
 
   function handleSubmit(e) {
     e.preventDefault();
     resetPassword(values.email);
   }
-
-  useEffect(() => {
-    authCheck();
-  }, []);
 
   return (
     <form className={`${styles.container} form`} onSubmit={handleSubmit}>

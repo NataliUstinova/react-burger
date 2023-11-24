@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import styles from "./register.module.css";
 import { Link } from "react-router-dom";
 import {
@@ -12,15 +12,11 @@ const Register = () => {
   const { values, setValues, errors, handleInputChange, isDisabled } =
     useValidation("form");
 
-  const { handleRegister, authCheck } = useAuth();
+  const { handleRegister } = useAuth();
   function handleSubmit(e) {
     e.preventDefault();
     handleRegister(values.email, values.password, values.name);
   }
-
-  useEffect(() => {
-    authCheck();
-  }, []);
 
   return (
     <form className={`${styles.container} form`} onSubmit={handleSubmit}>

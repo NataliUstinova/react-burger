@@ -12,7 +12,7 @@ import { useSelector } from "react-redux";
 const ResetPassword = () => {
   const { values, setValues, errors, handleInputChange, isDisabled } =
     useValidation("form");
-  const { confirmResetPassword, authCheck } = useAuth();
+  const { confirmResetPassword } = useAuth();
   const { resetRequestSent } = useSelector((store) => store.user);
   const navigate = useNavigate();
   function handleSubmit(e) {
@@ -21,7 +21,6 @@ const ResetPassword = () => {
   }
 
   useEffect(() => {
-    authCheck();
     !resetRequestSent && navigate("/forgot-password");
   }, []);
 

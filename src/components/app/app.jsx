@@ -41,8 +41,8 @@ function App() {
   };
 
   const init = async () => {
-    await getCookie("token");
-    if (getCookie("token")) {
+    await getCookie("accessToken");
+    if (getCookie("accessToken")) {
       dispatch(setUserIsAuth(true));
       await getUserData();
     }
@@ -52,6 +52,13 @@ function App() {
     init();
     dispatch(fetchIngredients());
   }, []);
+
+  const token = getCookie("accessToken");
+  useEffect(() => {
+    if (getCookie("accessToken")) {
+      dispatch(setUserIsAuth(true));
+    }
+  }, [token, dispatch]);
 
   return (
     <div className={appStyles.container}>
@@ -72,8 +79,14 @@ function App() {
       </Suspense>
       <Routes>
         <Route path="/" element={<Main />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+        <Route
+          path="/login"
+          element={<ProtectedRoute anonymous element={<Login />} />}
+        />
+        <Route
+          path="/register"
+          element={<ProtectedRoute anonymous element={<Register />} />}
+        />
 
         <Route path="/order-feed" element={<OrderFeed />} />
 
@@ -85,8 +98,14 @@ function App() {
           path="/profile/orders"
           element={<ProtectedRoute element={<Orders />} />}
         />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/reset-password" element={<ResetPassword />} />
+        <Route
+          path="/forgot-password"
+          element={<ProtectedRoute anonymous element={<ForgotPassword />} />}
+        />
+        <Route
+          path="/reset-password"
+          element={<ProtectedRoute anonymous element={<ResetPassword />} />}
+        />
 
         <Route path="/ingredients/:id" element={<Ingredient />} />
       </Routes>
