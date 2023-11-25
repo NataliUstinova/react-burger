@@ -24,7 +24,7 @@ class Api {
     localStorage.setItem("refreshToken", refreshToken);
   };
 
-  refreshTokenRequest = () => {
+  _refreshTokenRequest = () => {
     return fetch(`${this._baseUrl}/auth/token`, {
       method: "POST",
       headers: {
@@ -36,7 +36,7 @@ class Api {
     }).then(this._checkServerResponse);
   };
 
-  fetchWithRefresh = async (url, options) => {
+  _fetchWithRefresh = async (url, options) => {
     try {
       const res = await fetch(`${this._baseUrl}${url}`, options);
       return await this._checkServerResponse(res);
@@ -47,7 +47,7 @@ class Api {
           localStorage.getItem("refreshToken")) ||
         !getCookie("accessToken")
       ) {
-        const { refreshToken, accessToken } = await this.refreshTokenRequest();
+        const { refreshToken, accessToken } = await this._refreshTokenRequest();
         this.saveTokens(refreshToken, accessToken);
 
         options.headers.authorization = accessToken;
@@ -69,7 +69,7 @@ class Api {
   }
 
   postOrder(ingredientsIds) {
-    return this.fetchWithRefresh("/orders", {
+    return this._fetchWithRefresh("/orders", {
       method: "POST",
       headers: this._headers,
       body: JSON.stringify({ ingredients: ingredientsIds }),
@@ -93,7 +93,7 @@ class Api {
   }
 
   getUser() {
-    return this.fetchWithRefresh("/auth/user", {
+    return this._fetchWithRefresh("/auth/user", {
       method: "GET",
       headers: {
         ...this._headers,
@@ -103,7 +103,7 @@ class Api {
   }
 
   logout() {
-    return this.fetchWithRefresh("/auth/logout", {
+    return this._request("/auth/logout", {
       method: "POST",
       headers: {
         ...this._headers,
@@ -113,7 +113,7 @@ class Api {
   }
 
   updateUser({ name, email, password }) {
-    return this.fetchWithRefresh("/auth/user", {
+    return this._fetchWithRefresh("/auth/user", {
       method: "PATCH",
       headers: {
         ...this._headers,
@@ -124,7 +124,7 @@ class Api {
   }
 
   resetPassword(email) {
-    return this.fetchWithRefresh("/password-reset", {
+    return this._fetchWithRefresh("/password-reset", {
       method: "POST",
       headers: this._headers,
       body: JSON.stringify({ email: email }),
@@ -132,7 +132,7 @@ class Api {
   }
 
   confirmPasswordReset(password, token) {
-    return this.fetchWithRefresh("/password-reset/reset", {
+    return this._fetchWithRefresh("/password-reset/reset", {
       method: "POST",
       headers: this._headers,
       body: JSON.stringify({ password: password, token: token }),
