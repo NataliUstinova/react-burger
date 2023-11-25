@@ -15,7 +15,7 @@ import { postOrder } from "../../services/slices/order.slice";
 import { modalTypes, openModal } from "../../services/slices/modal.slice";
 import ConstructorElementWrapper from "./components/constructor-element-wrapper/constructor-element-wrapper";
 import { v4 as uuid } from "uuid";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { setPreLoginLocation } from "../../services/slices/user.slice";
 
 const BurgerConstructor = () => {
@@ -23,7 +23,7 @@ const BurgerConstructor = () => {
   const { constructorIngredients, middleIngredients, totalPrice } = useSelector(
     (state) => state.ingredients
   );
-
+  const location = useLocation();
   const { isAuth } = useSelector((state) => state.user);
   const navigate = useNavigate();
   const buns = constructorIngredients?.filter(
@@ -53,6 +53,11 @@ const BurgerConstructor = () => {
 
     dispatch(postOrder(ingredientIds))
       .unwrap()
+      .then((res) => {
+        navigate(`profile/orders/${res.number}`, {
+          state: { background: location },
+        });
+      })
       .then(() => {
         dispatch(openModal({ modalType: modalTypes.ORDER }));
       })

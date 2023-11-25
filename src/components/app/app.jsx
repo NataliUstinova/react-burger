@@ -1,5 +1,5 @@
 import React, { lazy, Suspense, useEffect } from "react";
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import appStyles from "./app.module.css";
 import Main from "../../pages/main/main";
 import OrderFeed from "../../pages/order-feed/order-feed";
@@ -36,8 +36,8 @@ function App() {
   const handleModalClose = () => {
     dispatch(closeModal());
     modalType === modalTypes.INGREDIENT
-      ? dispatch(resetCurrentIngredient()) && navigate("/")
-      : dispatch(resetOrder());
+      ? dispatch(resetCurrentIngredient()) && navigate(-1)
+      : dispatch(resetOrder()) && navigate(-1);
   };
 
   const init = async () => {
@@ -60,11 +60,14 @@ function App() {
     }
   }, [token, dispatch]);
 
+  const location = useLocation();
+  let background = location.state?.background;
+
   return (
     <div className={appStyles.container}>
       <AppHeader />
       <Suspense fallback={null}>
-        {isOpen && (
+        {background && isOpen && (
           <Modal
             onClose={handleModalClose}
             children={
@@ -77,7 +80,7 @@ function App() {
           />
         )}
       </Suspense>
-      <Routes>
+      <Routes location={background || location}>
         <Route path="/" element={<Main />} />
         <Route
           path="/login"
@@ -106,7 +109,6 @@ function App() {
           path="/reset-password"
           element={<ProtectedRoute anonymous element={<ResetPassword />} />}
         />
-
         <Route path="/ingredients/:id" element={<Ingredient />} />
       </Routes>
     </div>
