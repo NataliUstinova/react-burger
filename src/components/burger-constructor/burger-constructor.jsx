@@ -29,7 +29,7 @@ const BurgerConstructor = () => {
   const buns = constructorIngredients?.filter(
     (ingredient) => ingredient.type === "bun"
   );
-
+  const { loading } = useSelector((state) => state.order);
   const [{ isHover }, dropTargetRef] = useDrop({
     accept: "ingredient",
     collect: (monitor) => ({
@@ -138,7 +138,7 @@ const BurgerConstructor = () => {
           htmlType="submit"
           type="primary"
           size="large"
-          children="Оформить заказ"
+          children={loading ? "Оформление..." : "Оформить заказ"}
           extraClass="ml-10"
           onClick={handleOrder}
           disabled={constructorIngredients.length === 0 || !buns[0]}
