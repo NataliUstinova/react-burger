@@ -23,6 +23,7 @@ import ProtectedRoute from "../protected-route/protected-route";
 import { getCookie } from "../../utils/cookies";
 import { setUserIsAuth } from "../../services/slices/user.slice";
 import useAuth from "../../utils/auth";
+import Error404 from "../../pages/error404/error404";
 const IngredientDetails = lazy(() =>
   import("../ingredient-details/ingredient-details")
 );
@@ -110,6 +111,7 @@ function App() {
           element={<ProtectedRoute anonymous element={<ResetPassword />} />}
         />
         <Route path="/ingredients/:id" element={<Ingredient />} />
+        <Route path={"*"} element={<Error404 />} />
       </Routes>
     </div>
   );
