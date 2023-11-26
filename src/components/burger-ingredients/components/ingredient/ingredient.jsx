@@ -26,7 +26,6 @@ const Ingredient = ({ ingredient }) => {
   function handleClick() {
     dispatch(setCurrentIngredient(ingredient));
     dispatch(openModal({ modalType: modalTypes.INGREDIENT }));
-    // navigate(`/ingredients/${_id}`, { replace: true });
   }
 
   const [{ opacity }, dragRef] = useDrag({

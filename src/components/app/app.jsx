@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useEffect } from "react";
+import React, { useEffect } from "react";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import appStyles from "./app.module.css";
 import Main from "../../pages/main/main";
@@ -24,13 +24,11 @@ import { getCookie } from "../../utils/cookies";
 import { setUserIsAuth } from "../../services/slices/user.slice";
 import useAuth from "../../utils/auth";
 import Error404 from "../../pages/error404/error404";
-const IngredientDetails = lazy(() =>
-  import("../ingredient-details/ingredient-details")
-);
-const OrderDetails = lazy(() => import("../order-details/order-details"));
+import IngredientDetails from "../ingredient-details/ingredient-details";
+import OrderDetails from "../order-details/order-details";
 
 function App() {
-  const { isOpen, modalType } = useSelector((state) => state.modal);
+  const { modalType } = useSelector((state) => state.modal);
   const dispatch = useDispatch();
   const { getUserData } = useAuth();
   const navigate = useNavigate();
@@ -67,20 +65,6 @@ function App() {
   return (
     <div className={appStyles.container}>
       <AppHeader />
-      <Suspense fallback={null}>
-        {background && isOpen && (
-          <Modal
-            onClose={handleModalClose}
-            children={
-              modalType === modalTypes.INGREDIENT ? (
-                <IngredientDetails />
-              ) : (
-                <OrderDetails />
-              )
-            }
-          />
-        )}
-      </Suspense>
       <Routes location={background || location}>
         <Route path="/" element={<Main />} />
         <Route
@@ -113,6 +97,35 @@ function App() {
         <Route path="/ingredients/:id" element={<Ingredient />} />
         <Route path={"*"} element={<Error404 />} />
       </Routes>
+      {background && (
+        <Routes>
+          <Route
+            path="/ingredients/:id"
+            element={
+              <Modal onClose={handleModalClose}>
+                <IngredientDetails />
+              </Modal>
+            }
+          />
+        </Routes>
+      )}
+
+      {background && (
+        <Routes>
+          <Route
+            path="/profile/orders/:number"
+            element={
+              <ProtectedRoute
+                element={
+                  <Modal onClose={handleModalClose}>
+                    <OrderDetails />
+                  </Modal>
+                }
+              />
+            }
+          />
+        </Routes>
+      )}
     </div>
   );
 }
