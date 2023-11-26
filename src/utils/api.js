@@ -42,8 +42,8 @@ class Api {
       return await this._checkServerResponse(res);
     } catch (err) {
       if (
-        err.message === "jwt expired" ||
-        (err.message === "You should be authorised" &&
+        err === "jwt expired" ||
+        (err === "You should be authorised" &&
           localStorage.getItem("refreshToken")) ||
         !getCookie("accessToken")
       ) {
@@ -51,7 +51,6 @@ class Api {
         this.saveTokens(refreshToken, accessToken);
 
         options.headers.authorization = accessToken;
-
         const res = await fetch(`${this._baseUrl}${url}`, options);
 
         return await this._checkServerResponse(res);
