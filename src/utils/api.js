@@ -1,3 +1,5 @@
+import { getCookie, setCookie } from "./cookies";
+
 const BASE_URL = "https://norma.nomoreparties.space/api";
 
 class Api {
@@ -17,6 +19,47 @@ class Api {
     );
   }
 
+  saveTokens = (refreshToken, accessToken) => {
+    setCookie("accessToken", accessToken);
+    localStorage.setItem("refreshToken", refreshToken);
+  };
+
+  _refreshTokenRequest = () => {
+    return fetch(`${this._baseUrl}/auth/token`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+      },
+      body: JSON.stringify({
+        token: localStorage.getItem("refreshToken"),
+      }),
+    }).then(this._checkServerResponse);
+  };
+
+  _fetchWithRefresh = async (url, options) => {
+    try {
+      const res = await fetch(`${this._baseUrl}${url}`, options);
+      return await this._checkServerResponse(res);
+    } catch (err) {
+      if (
+        err === "jwt expired" ||
+        (err === "You should be authorised" &&
+          localStorage.getItem("refreshToken")) ||
+        !getCookie("accessToken")
+      ) {
+        const { refreshToken, accessToken } = await this._refreshTokenRequest();
+        this.saveTokens(refreshToken, accessToken);
+
+        options.headers.authorization = accessToken;
+        const res = await fetch(`${this._baseUrl}${url}`, options);
+
+        return await this._checkServerResponse(res);
+      } else {
+        return Promise.reject(err);
+      }
+    }
+  };
+
   fetchIngredients() {
     return this._request("/ingredients", {
       method: "GET",
@@ -25,10 +68,73 @@ class Api {
   }
 
   postOrder(ingredientsIds) {
-    return this._request("/orders", {
+    return this._fetchWithRefresh("/orders", {
       method: "POST",
       headers: this._headers,
       body: JSON.stringify({ ingredients: ingredientsIds }),
+    });
+  }
+
+  register({ email, password, name }) {
+    return this._request("/auth/register", {
+      method: "POST",
+      headers: this._headers,
+      body: JSON.stringify({ email: email, password: password, name: name }),
+    });
+  }
+
+  login(email, password) {
+    return this._request("/auth/login", {
+      method: "POST",
+      headers: this._headers,
+      body: JSON.stringify({ email: email, password: password }),
+    });
+  }
+
+  getUser() {
+    return this._fetchWithRefresh("/auth/user", {
+      method: "GET",
+      headers: {
+        ...this._headers,
+        Authorization: getCookie("accessToken"),
+      },
+    });
+  }
+
+  logout() {
+    return this._request("/auth/logout", {
+      method: "POST",
+      headers: {
+        ...this._headers,
+      },
+      body: JSON.stringify({ token: localStorage.getItem("refreshToken") }),
+    });
+  }
+
+  updateUser({ name, email, password }) {
+    return this._fetchWithRefresh("/auth/user", {
+      method: "PATCH",
+      headers: {
+        ...this._headers,
+        Authorization: getCookie("accessToken"),
+      },
+      body: JSON.stringify({ name: name, email: email, password: password }),
+    });
+  }
+
+  resetPassword(email) {
+    return this._fetchWithRefresh("/password-reset", {
+      method: "POST",
+      headers: this._headers,
+      body: JSON.stringify({ email: email }),
+    });
+  }
+
+  confirmPasswordReset(password, token) {
+    return this._fetchWithRefresh("/password-reset/reset", {
+      method: "POST",
+      headers: this._headers,
+      body: JSON.stringify({ password: password, token: token }),
     });
   }
 }

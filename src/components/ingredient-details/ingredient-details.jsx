@@ -1,10 +1,26 @@
-import React from "react";
+import React, { useEffect } from "react";
 import ingredientDetailsStyles from "./ingredient-details.module.css";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
+import { setCurrentIngredient } from "../../services/slices/ingredients.slice";
 const IngredientDetails = () => {
-  const { currentIngredient } = useSelector((state) => state.ingredients);
+  const { currentIngredient, ingredients } = useSelector(
+    (state) => state.ingredients
+  );
+  const dispatch = useDispatch();
   const { image, name, carbohydrates, fat, proteins, calories } =
     currentIngredient;
+
+  const { id } = useParams();
+
+  useEffect(() => {
+    if (id && ingredients) {
+      dispatch(
+        setCurrentIngredient(ingredients?.find((item) => item._id === id))
+      );
+    }
+  }, [id, ingredients]);
+
   return (
     <div className={ingredientDetailsStyles.container}>
       <h2

@@ -15,17 +15,21 @@ import { postOrder } from "../../services/slices/order.slice";
 import { modalTypes, openModal } from "../../services/slices/modal.slice";
 import ConstructorElementWrapper from "./components/constructor-element-wrapper/constructor-element-wrapper";
 import { v4 as uuid } from "uuid";
+import { useLocation, useNavigate } from "react-router-dom";
+import { setPreLoginLocation } from "../../services/slices/user.slice";
 
 const BurgerConstructor = () => {
   const dispatch = useDispatch();
   const { constructorIngredients, middleIngredients, totalPrice } = useSelector(
     (state) => state.ingredients
   );
-
+  const location = useLocation();
+  const { isAuth } = useSelector((state) => state.user);
+  const navigate = useNavigate();
   const buns = constructorIngredients?.filter(
     (ingredient) => ingredient.type === "bun"
   );
-
+  const { loading } = useSelector((state) => state.order);
   const [{ isHover }, dropTargetRef] = useDrop({
     accept: "ingredient",
     collect: (monitor) => ({
@@ -37,12 +41,23 @@ const BurgerConstructor = () => {
   });
 
   const handleOrder = () => {
+    if (!isAuth) {
+      dispatch(setPreLoginLocation("/"));
+      navigate("/login");
+      return;
+    }
+
     const ingredientIds = constructorIngredients.map(
       (ingredient) => ingredient._id
     );
 
     dispatch(postOrder(ingredientIds))
       .unwrap()
+      .then((res) => {
+        navigate(`profile/orders/${res.number}`, {
+          state: { background: location },
+        });
+      })
       .then(() => {
         dispatch(openModal({ modalType: modalTypes.ORDER }));
       })
@@ -123,7 +138,7 @@ const BurgerConstructor = () => {
           htmlType="submit"
           type="primary"
           size="large"
-          children="Оформить заказ"
+          children={loading ? "Оформление..." : "Оформить заказ"}
           extraClass="ml-10"
           onClick={handleOrder}
           disabled={constructorIngredients.length === 0 || !buns[0]}

@@ -1,0 +1,13 @@
+.container {
+  height: calc(100% - 210px);
+  display: flex;
+  flex-direction: row;
+  align-items: start;
+  justify-content: center;
+  gap: 60px;
+  padding-top: 60px;
+}
+
+.orders {
+  width: 480px;
+}

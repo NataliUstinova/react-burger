@@ -10,7 +10,7 @@ import {
   DragIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import elementWrapper from "./constructor-element-wrapper.module.css";
-import { ingredientPropTypes } from "../../../../utils/data";
+import { ingredientPropTypes } from "../../../../utils/types";
 import PropTypes from "prop-types";
 
 export default function ConstructorElementWrapper({ item, index }) {

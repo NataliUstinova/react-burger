@@ -5,16 +5,18 @@ import {
   CurrencyIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import PropTypes from "prop-types";
-import { ingredientPropTypes } from "../../../../utils/data";
+import { ingredientPropTypes } from "../../../../utils/types";
 import { useDrag } from "react-dnd";
 import { useDispatch, useSelector } from "react-redux";
 import { setCurrentIngredient } from "../../../../services/slices/ingredients.slice";
 import { modalTypes, openModal } from "../../../../services/slices/modal.slice";
+import { Link, useLocation } from "react-router-dom";
 
 const Ingredient = ({ ingredient }) => {
   const { image, name, price, _id } = ingredient;
   const dispatch = useDispatch();
   const { constructorIngredients } = useSelector((state) => state.ingredients);
+  const location = useLocation();
 
   const counter = useMemo(
     () => constructorIngredients.filter((item) => item._id === _id).length,
@@ -35,7 +37,10 @@ const Ingredient = ({ ingredient }) => {
   });
 
   return (
-    <li
+    <Link
+      key={_id}
+      state={{ background: location }}
+      to={`/ingredients/${_id}`}
       ref={dragRef}
       className={ingredientStyles.ingredientBlock}
       onClick={handleClick}
@@ -60,7 +65,7 @@ const Ingredient = ({ ingredient }) => {
       >
         {name}
       </p>
-    </li>
+    </Link>
   );
 };
 
