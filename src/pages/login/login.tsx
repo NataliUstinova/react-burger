@@ -18,7 +18,7 @@ const Login: React.FC = () => {
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    handleLogin(values.email, values.password);
+    handleLogin({ email: values.email, password: values.password });
   }
 
   return (

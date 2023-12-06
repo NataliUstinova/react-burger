@@ -3,7 +3,7 @@ import ingredientDetailsStyles from "./ingredient-details.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { setCurrentIngredient } from "../../services/slices/ingredients.slice";
-import { IngredientType } from "../../utils/types";
+import { TIngredientType } from "../../utils/types";
 
 interface IngredientDetailsProps {}
 
@@ -21,7 +21,7 @@ const IngredientDetails: React.FC<IngredientDetailsProps> = () => {
     if (id && ingredients) {
       dispatch(
         setCurrentIngredient(
-          ingredients?.find((item: IngredientType) => item._id === id)
+          ingredients?.find((item: TIngredientType) => item._id === id)
         )
       );
     }

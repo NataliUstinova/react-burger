@@ -19,7 +19,10 @@ const ResetPassword: React.FC = () => {
   const navigate = useNavigate();
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    confirmResetPassword(values.password, values.token.trim());
+    confirmResetPassword({
+      password: values.password,
+      token: values.token.trim(),
+    });
   }
 
   useEffect(() => {

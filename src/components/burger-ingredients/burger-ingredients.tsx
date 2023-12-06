@@ -5,7 +5,7 @@ import IngredientsRowBlock from "./components/ingredient-row-block/ingredient-ro
 import { useDispatch, useSelector } from "react-redux";
 import { setCurrentTab } from "../../services/slices/tabs.slice";
 import { useInView } from "react-intersection-observer";
-import { IngredientType } from "../../utils/types";
+import { TIngredientType } from "../../utils/types";
 
 const BurgerIngredients: React.FC = () => {
   const dispatch = useDispatch();
@@ -20,19 +20,19 @@ const BurgerIngredients: React.FC = () => {
   const buns = useMemo(
     () =>
       ingredients &&
-      ingredients?.filter((item: IngredientType) => item.type === "bun"),
+      ingredients?.filter((item: TIngredientType) => item.type === "bun"),
     [ingredients]
   );
   const sauces = useMemo(
     () =>
       ingredients &&
-      ingredients?.filter((item: IngredientType) => item.type === "sauce"),
+      ingredients?.filter((item: TIngredientType) => item.type === "sauce"),
     [ingredients]
   );
   const mains = useMemo(
     () =>
       ingredients &&
-      ingredients?.filter((item: IngredientType) => item.type === "main"),
+      ingredients?.filter((item: TIngredientType) => item.type === "main"),
     [ingredients]
   );
   const bunsRef = useRef<HTMLDivElement>(null);

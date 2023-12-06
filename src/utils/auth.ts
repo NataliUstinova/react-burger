@@ -12,14 +12,23 @@ import {
 } from "../services/slices/user.slice";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import {
+  TUserConfirmPasswordReset,
+  TUserLoginInfo,
+  TUserRegisterInfo,
+  TUserResetPassword,
+} from "./types";
 
 interface AuthHook {
   handleLogout: () => void;
-  handleLogin: (email: string, password: string) => void;
-  handleRegister: (email: string, password: string, name: string) => void;
+  handleLogin: ({ email, password }: TUserLoginInfo) => void;
+  handleRegister: ({ email, password, name }: TUserRegisterInfo) => void;
   getUserData: () => void;
-  resetPassword: (email: string) => void;
-  confirmResetPassword: (password: string, token: string) => void;
+  resetPassword: ({ email }: TUserResetPassword) => void;
+  confirmResetPassword: ({
+    password,
+    token,
+  }: TUserConfirmPasswordReset) => void;
   authCheck: () => void;
 }
 
@@ -43,9 +52,9 @@ const useAuth = (): AuthHook => {
     });
   };
 
-  const handleLogin = (email: string, password: string) => {
+  const handleLogin = ({ email, password }: TUserLoginInfo) => {
     api
-      .login(email, password)
+      .login({ email, password })
       .then((res) => {
         if (res.success) {
           api.saveTokens(res.refreshToken, res.accessToken);
@@ -62,7 +71,7 @@ const useAuth = (): AuthHook => {
       });
   };
 
-  const handleRegister = (email: string, password: string, name: string) => {
+  const handleRegister = ({ email, password, name }: TUserRegisterInfo) => {
     api
       .register({
         email: email,
@@ -101,9 +110,9 @@ const useAuth = (): AuthHook => {
       });
   };
 
-  const resetPassword = (email: string) => {
+  const resetPassword = ({ email }: TUserResetPassword) => {
     api
-      .resetPassword(email)
+      .resetPassword({ email })
       .then((res) => {
         if (res.success) {
           dispatch(resetRequestSent(true));
@@ -113,9 +122,12 @@ const useAuth = (): AuthHook => {
       .catch(console.error);
   };
 
-  const confirmResetPassword = (password: string, token: string) => {
+  const confirmResetPassword = ({
+    password,
+    token,
+  }: TUserConfirmPasswordReset) => {
     api
-      .confirmPasswordReset(password, token)
+      .confirmPasswordReset({ password, token })
       .then((res) => {
         console.log(res);
         if (res.success) {

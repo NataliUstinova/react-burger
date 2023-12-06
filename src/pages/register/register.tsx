@@ -17,7 +17,11 @@ const Register: React.FC = () => {
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    handleRegister(values.email, values.password, values.name);
+    handleRegister({
+      email: values.email,
+      password: values.password,
+      name: values.name,
+    });
   }
 
   return (

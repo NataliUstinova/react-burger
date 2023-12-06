@@ -1,11 +1,11 @@
 import ingredientRowBlockStyles from "./ingredient-row-block.module.css";
 import Ingredient from "../ingredient/ingredient";
 import { forwardRef, Ref } from "react";
-import { IngredientType } from "../../../../utils/types";
+import { TIngredientType } from "../../../../utils/types";
 
 interface IngredientsRowBlockProps {
   title: string;
-  ingredients: IngredientType[];
+  ingredients: TIngredientType[];
 }
 
 const IngredientsRowBlock = forwardRef(

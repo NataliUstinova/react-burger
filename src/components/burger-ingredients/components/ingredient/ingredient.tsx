@@ -9,10 +9,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { setCurrentIngredient } from "../../../../services/slices/ingredients.slice";
 import { modalTypes, openModal } from "../../../../services/slices/modal.slice";
 import { Link, useLocation } from "react-router-dom";
-import { IngredientType } from "../../../../utils/types";
+import { TIngredientType } from "../../../../utils/types";
 
 interface IngredientProps {
-  ingredient: IngredientType;
+  ingredient: TIngredientType;
 }
 
 const Ingredient: React.FC<IngredientProps> = ({ ingredient }) => {
@@ -25,7 +25,7 @@ const Ingredient: React.FC<IngredientProps> = ({ ingredient }) => {
 
   const counter = useMemo(
     () =>
-      constructorIngredients.filter((item: IngredientType) => item._id === _id)
+      constructorIngredients.filter((item: TIngredientType) => item._id === _id)
         .length,
     [constructorIngredients, _id]
   );

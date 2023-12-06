@@ -16,7 +16,7 @@ const ForgotPassword: React.FC = () => {
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    resetPassword(values.email);
+    resetPassword({ email: values.email });
   }
 
   return (

@@ -10,10 +10,10 @@ import {
   DragIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import elementWrapper from "./constructor-element-wrapper.module.css";
-import { IngredientType } from "../../../../utils/types";
+import { TIngredientType } from "../../../../utils/types";
 
 interface ConstructorElementWrapperProps {
-  item: IngredientType;
+  item: TIngredientType;
   index: number;
 }
 
@@ -29,7 +29,7 @@ const ConstructorElementWrapper: React.FC<ConstructorElementWrapperProps> = ({
 }) => {
   const dispatch = useDispatch();
 
-  function handleDelete(item: IngredientType) {
+  function handleDelete(item: TIngredientType) {
     dispatch(deleteConstructorIngredient(item.uniqueId));
   }
 

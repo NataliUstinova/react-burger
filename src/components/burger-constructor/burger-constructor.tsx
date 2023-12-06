@@ -17,7 +17,7 @@ import ConstructorElementWrapper from "./components/constructor-element-wrapper/
 import { v4 as uuid } from "uuid";
 import { useLocation, useNavigate } from "react-router-dom";
 import { setPreLoginLocation } from "../../services/slices/user.slice";
-import { IngredientType } from "../../utils/types";
+import { TIngredientType } from "../../utils/types";
 
 const BurgerConstructor: React.FC = () => {
   const dispatch = useDispatch();
@@ -28,7 +28,7 @@ const BurgerConstructor: React.FC = () => {
   const { isAuth } = useSelector((state: any) => state.user);
   const navigate = useNavigate();
   const buns = constructorIngredients?.filter(
-    (ingredient: IngredientType) => ingredient.type === "bun"
+    (ingredient: TIngredientType) => ingredient.type === "bun"
   );
   const { loading } = useSelector((state: any) => state.order);
   const [{ isHover }, dropTargetRef] = useDrop({
@@ -36,7 +36,7 @@ const BurgerConstructor: React.FC = () => {
     collect: (monitor) => ({
       isHover: monitor.isOver(),
     }),
-    drop: (item: IngredientType) => {
+    drop: (item: TIngredientType) => {
       dispatch(setConstructorIngredients({ ...item, uniqueId: uuid() }));
     },
   });
@@ -49,7 +49,7 @@ const BurgerConstructor: React.FC = () => {
     }
 
     const ingredientIds: string[] = constructorIngredients.map(
-      (ingredient: IngredientType) => ingredient._id
+      (ingredient: TIngredientType) => ingredient._id
     );
 
     // @ts-ignore
@@ -107,7 +107,7 @@ const BurgerConstructor: React.FC = () => {
               }`}
             >
               {middleIngredients.map(
-                (ingredient: IngredientType, index: number) => (
+                (ingredient: TIngredientType, index: number) => (
                   <ConstructorElementWrapper
                     key={ingredient.uniqueId}
                     item={ingredient}
