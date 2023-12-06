@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./orders.module.css";
 import Nav from "../nav/nav";
-const Orders = () => {
+const Orders: React.FC = () => {
   return (
     <div className={styles.container}>
       <Nav />

@@ -1,32 +1,48 @@
 import React, { useRef } from "react";
-import { useDrag, useDrop } from "react-dnd";
+import { useDrag, useDrop, XYCoord } from "react-dnd";
+import { useDispatch } from "react-redux";
 import {
   deleteConstructorIngredient,
   moveMiddleIngredients,
 } from "../../../../services/slices/ingredients.slice";
-import { useDispatch } from "react-redux";
 import {
   ConstructorElement,
   DragIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import elementWrapper from "./constructor-element-wrapper.module.css";
-import { ingredientPropTypes } from "../../../../utils/types";
-import PropTypes from "prop-types";
+import { IngredientType } from "../../../../utils/types";
 
-export default function ConstructorElementWrapper({ item, index }) {
+interface ConstructorElementWrapperProps {
+  item: IngredientType;
+  index: number;
+}
+
+interface DragItem {
+  type?: string;
+  id: string;
+  index: number;
+}
+
+const ConstructorElementWrapper: React.FC<ConstructorElementWrapperProps> = ({
+  item,
+  index,
+}) => {
   const dispatch = useDispatch();
-  function handleDelete(item) {
+
+  function handleDelete(item: IngredientType) {
     dispatch(deleteConstructorIngredient(item.uniqueId));
   }
-  const ref = useRef(null);
-  const [{ handlerId }, drop] = useDrop({
+
+  const ref = useRef<HTMLDivElement>(null);
+
+  const [{ handlerId }, drop] = useDrop<DragItem, any, any>({
     accept: "component",
     collect(monitor) {
       return {
         handlerId: monitor.getHandlerId(),
       };
     },
-    hover(item, monitor) {
+    hover(item: DragItem, monitor) {
       if (!ref.current) {
         return;
       }
@@ -38,8 +54,11 @@ export default function ConstructorElementWrapper({ item, index }) {
       const hoverBoundingRect = ref.current?.getBoundingClientRect();
       const hoverMiddleY =
         (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
-      const clientOffset = monitor.getClientOffset();
-      const hoverClientY = clientOffset.y - hoverBoundingRect.top;
+      const clientOffset: XYCoord | null = monitor.getClientOffset();
+      if (!clientOffset) {
+        return;
+      }
+      const hoverClientY: number = clientOffset.y - hoverBoundingRect.top;
       if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
         return;
       }
@@ -51,17 +70,20 @@ export default function ConstructorElementWrapper({ item, index }) {
       item.index = hoverIndex;
     },
   });
-  const [{ isDragging }, drag] = useDrag({
+
+  const [{ isDragging }, drag] = useDrag<DragItem, any, any>({
     type: "component",
-    item: () => ({ id: item.id, index }),
+    item: { id: item._id, index },
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),
   });
 
   const opacity = isDragging ? 0 : 1;
+
   drag(drop(ref));
-  const preventDefault = (e) => e.preventDefault();
+
+  const preventDefault = (e: React.DragEvent) => e.preventDefault();
 
   return (
     <div
@@ -74,7 +96,7 @@ export default function ConstructorElementWrapper({ item, index }) {
     >
       <DragIcon type="primary" />
       <ConstructorElement
-        index={index}
+        // index={index}
         text={item.name}
         price={item.price}
         thumbnail={item.image_mobile}
@@ -82,9 +104,6 @@ export default function ConstructorElementWrapper({ item, index }) {
       />
     </div>
   );
-}
-
-ConstructorElementWrapper.propTypes = {
-  item: PropTypes.shape(ingredientPropTypes).isRequired,
-  index: PropTypes.number.isRequired,
 };
+
+export default ConstructorElementWrapper;

@@ -3,9 +3,9 @@ import profileStyles from "../profile.module.css";
 import { NavLink } from "react-router-dom";
 import useAuth from "../../../utils/auth";
 
-const Nav = () => {
+const Nav: React.FC = () => {
   const { handleLogout } = useAuth();
-  const [isOrdersActive, setIsOrdersActive] = React.useState(false);
+  const [isOrdersActive, setIsOrdersActive] = React.useState<boolean>(false);
 
   useEffect(() => {
     setIsOrdersActive(window.location.pathname === "/profile/orders");

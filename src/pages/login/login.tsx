@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "./register.module.css";
+import styles from "./login.module.css";
 import { Link } from "react-router-dom";
 import {
   Button,
@@ -8,53 +8,40 @@ import {
 import useValidation from "../../hooks/useValidation";
 import useAuth from "../../utils/auth";
 
-const Register = () => {
-  const { values, setValues, errors, handleInputChange, isDisabled } =
-    useValidation("form");
+const Login: React.FC = () => {
+  const [showPassword, setShowPassword] = React.useState<boolean>(false);
 
-  const { handleRegister } = useAuth();
-  function handleSubmit(e) {
+  const { values, errors, handleInputChange, isDisabled } = useValidation({
+    formClass: "form",
+  });
+  const { handleLogin } = useAuth();
+
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    handleRegister(values.email, values.password, values.name);
+    handleLogin(values.email, values.password);
   }
 
   return (
     <form className={`${styles.container} form`} onSubmit={handleSubmit}>
-      <h1 className="text text_type_main-medium">Регистрация</h1>
-      <Input
-        type="text"
-        placeholder="Имя"
-        value={values.name || ""}
-        onChange={(e) => handleInputChange(e)}
-        name="name"
-        error={!!errors.name}
-        errorText={errors.name}
-        size={"default"}
-        extraClass="mt-6 mb-6"
-      />
+      <h1 className="text text_type_main-medium">Вход</h1>
       <Input
         type="email"
         placeholder="Email"
         value={values.email || ""}
         onChange={(e) => handleInputChange(e)}
-        name="email"
+        name={"email"}
         error={!!errors.email}
         errorText={errors.email}
         size={"default"}
-        extraClass="mb-6"
+        extraClass="mt-6 mb-6"
       />
       <Input
-        type={values.showPassword ? "text" : "password"}
+        type={showPassword ? "text" : "password"}
         placeholder="Пароль"
         value={values.password || ""}
         onChange={(e) => handleInputChange(e)}
         icon={"ShowIcon"}
-        onIconClick={() => {
-          setValues((prevValues) => ({
-            ...prevValues,
-            showPassword: !prevValues.showPassword,
-          }));
-        }}
+        onIconClick={() => setShowPassword((prev) => !prev)}
         name={"password"}
         error={!!errors.password}
         errorText={errors.password}
@@ -67,20 +54,29 @@ const Register = () => {
         htmlType="submit"
         disabled={!isDisabled}
       >
-        Зарегистрироваться
+        Войти
       </Button>
 
       <p className="mt-20 text_type_main-default text_color_inactive">
-        Уже зарегистрированы?
+        Вы — новый пользователь?
         <Link
-          to="/login"
+          to="/register"
           className={`${styles.link} ml-2 text_type_main-default text_color_accent`}
         >
-          Войти
+          Зарегистрироваться
+        </Link>
+      </p>
+      <p className="mt-4 text_type_main-default text_color_inactive">
+        Забыли пароль?
+        <Link
+          to="/forgot-password"
+          className={`${styles.link} ml-2 text_type_main-default text_color_accent`}
+        >
+          Восстановить пароль
         </Link>
       </p>
     </form>
   );
 };
 
-export default Register;
+export default Login;

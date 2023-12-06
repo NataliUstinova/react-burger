@@ -27,8 +27,8 @@ import Error404 from "../../pages/error404/error404";
 import IngredientDetails from "../ingredient-details/ingredient-details";
 import OrderDetails from "../order-details/order-details";
 
-function App() {
-  const { modalType } = useSelector((state) => state.modal);
+const App: React.FC = () => {
+  const { modalType } = useSelector((state: any) => state.modal);
   const dispatch = useDispatch();
   const { getUserData } = useAuth();
   const navigate = useNavigate();
@@ -49,6 +49,7 @@ function App() {
 
   useEffect(() => {
     init();
+    // @ts-ignore
     dispatch(fetchIngredients());
   }, []);
 
@@ -75,9 +76,7 @@ function App() {
           path="/register"
           element={<ProtectedRoute anonymous element={<Register />} />}
         />
-
         <Route path="/order-feed" element={<OrderFeed />} />
-
         <Route
           path="/profile"
           element={<ProtectedRoute element={<Profile />} />}
@@ -128,6 +127,6 @@ function App() {
       )}
     </div>
   );
-}
+};
 
 export default App;

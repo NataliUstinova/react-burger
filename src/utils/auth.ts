@@ -13,14 +13,23 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-const useAuth = () => {
+interface AuthHook {
+  handleLogout: () => void;
+  handleLogin: (email: string, password: string) => void;
+  handleRegister: (email: string, password: string, name: string) => void;
+  getUserData: () => void;
+  resetPassword: (email: string) => void;
+  confirmResetPassword: (password: string, token: string) => void;
+  authCheck: () => void;
+}
+
+const useAuth = (): AuthHook => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { preLoginLocation } = useSelector((state) => state.user);
+  const { preLoginLocation } = useSelector((state: any) => state.user);
 
-  function handleLogout() {
+  const handleLogout = () => {
     api.logout().then((res) => {
-      console.log(res);
       if (res.success) {
         deleteCookie("accessToken");
         localStorage.removeItem("refreshToken");
@@ -32,9 +41,9 @@ const useAuth = () => {
         navigate("/login");
       }
     });
-  }
+  };
 
-  function handleLogin(email, password) {
+  const handleLogin = (email: string, password: string) => {
     api
       .login(email, password)
       .then((res) => {
@@ -51,9 +60,9 @@ const useAuth = () => {
       .catch((err) => {
         alert(err);
       });
-  }
+  };
 
-  function handleRegister(email, password, name) {
+  const handleRegister = (email: string, password: string, name: string) => {
     api
       .register({
         email: email,
@@ -74,9 +83,9 @@ const useAuth = () => {
         }
       })
       .catch((err) => alert(err));
-  }
+  };
 
-  function getUserData() {
+  const getUserData = () => {
     api
       .getUser()
       .then((res) => {
@@ -90,9 +99,9 @@ const useAuth = () => {
         dispatch(setUserIsAuth(false));
         console.log(err);
       });
-  }
+  };
 
-  function resetPassword(email) {
+  const resetPassword = (email: string) => {
     api
       .resetPassword(email)
       .then((res) => {
@@ -102,9 +111,9 @@ const useAuth = () => {
         }
       })
       .catch(console.error);
-  }
+  };
 
-  function confirmResetPassword(password, token) {
+  const confirmResetPassword = (password: string, token: string) => {
     api
       .confirmPasswordReset(password, token)
       .then((res) => {
@@ -115,14 +124,14 @@ const useAuth = () => {
         }
       })
       .catch((err) => alert(err));
-  }
+  };
 
-  function authCheck() {
+  const authCheck = () => {
     if (getCookie("accessToken")) {
       dispatch(setUserIsAuth(true));
       navigate(-1);
     }
-  }
+  };
 
   return {
     handleLogout,
