@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import { useDrag, useDrop, XYCoord } from "react-dnd";
+import { useDrag, useDrop, DropTargetMonitor, DragSourceMonitor, XYCoord } from "react-dnd";
 import { useDispatch } from "react-redux";
 import {
   deleteConstructorIngredient,
@@ -23,6 +23,14 @@ interface DragItem {
   index: number;
 }
 
+const collectDrop = (monitor: DropTargetMonitor) => ({
+  handlerId: monitor.getHandlerId()
+});
+
+const collectDrag = (monitor: DragSourceMonitor) => ({
+  isDragging: monitor.isDragging(),
+});
+
 const ConstructorElementWrapper: React.FC<ConstructorElementWrapperProps> = ({
   item,
   index,
@@ -35,13 +43,9 @@ const ConstructorElementWrapper: React.FC<ConstructorElementWrapperProps> = ({
 
   const ref = useRef<HTMLDivElement>(null);
 
-  const [{ handlerId }, drop] = useDrop<DragItem, any, any>({
+  const [{ handlerId }, drop] = useDrop({
     accept: "component",
-    collect(monitor) {
-      return {
-        handlerId: monitor.getHandlerId(),
-      };
-    },
+    collect: collectDrop,
     hover(item: DragItem, monitor) {
       if (!ref.current) {
         return;
@@ -71,12 +75,10 @@ const ConstructorElementWrapper: React.FC<ConstructorElementWrapperProps> = ({
     },
   });
 
-  const [{ isDragging }, drag] = useDrag<DragItem, any, any>({
+  const [{ isDragging }, drag] = useDrag({
     type: "component",
     item: { id: item._id, index },
-    collect: (monitor) => ({
-      isDragging: monitor.isDragging(),
-    }),
+    collect: collectDrag,
   });
 
   const opacity = isDragging ? 0 : 1;
@@ -93,17 +95,16 @@ const ConstructorElementWrapper: React.FC<ConstructorElementWrapperProps> = ({
       style={{ opacity }}
       data-handler-id={handlerId}
       onDrop={preventDefault}
-    >
+      >
       <DragIcon type="primary" />
       <ConstructorElement
-        // index={index}
         text={item.name}
         price={item.price}
         thumbnail={item.image_mobile}
         handleClose={() => handleDelete(item)}
       />
     </div>
-  );
+    );
 };
 
 export default ConstructorElementWrapper;
