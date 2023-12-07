@@ -12,15 +12,33 @@ import {
 } from "../services/slices/user.slice";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import {
+  TUserConfirmPasswordReset,
+  TUserLoginInfo,
+  TUserRegisterInfo,
+  TUserResetPassword,
+} from "./types";
 
-const useAuth = () => {
+interface AuthHook {
+  handleLogout: () => void;
+  handleLogin: ({ email, password }: TUserLoginInfo) => void;
+  handleRegister: ({ email, password, name }: TUserRegisterInfo) => void;
+  getUserData: () => void;
+  resetPassword: ({ email }: TUserResetPassword) => void;
+  confirmResetPassword: ({
+    password,
+    token,
+  }: TUserConfirmPasswordReset) => void;
+  authCheck: () => void;
+}
+
+const useAuth = (): AuthHook => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { preLoginLocation } = useSelector((state) => state.user);
+  const { preLoginLocation } = useSelector((state: any) => state.user);
 
-  function handleLogout() {
+  const handleLogout = () => {
     api.logout().then((res) => {
-      console.log(res);
       if (res.success) {
         deleteCookie("accessToken");
         localStorage.removeItem("refreshToken");
@@ -32,11 +50,11 @@ const useAuth = () => {
         navigate("/login");
       }
     });
-  }
+  };
 
-  function handleLogin(email, password) {
+  const handleLogin = ({ email, password }: TUserLoginInfo) => {
     api
-      .login(email, password)
+      .login({ email, password })
       .then((res) => {
         if (res.success) {
           api.saveTokens(res.refreshToken, res.accessToken);
@@ -51,9 +69,9 @@ const useAuth = () => {
       .catch((err) => {
         alert(err);
       });
-  }
+  };
 
-  function handleRegister(email, password, name) {
+  const handleRegister = ({ email, password, name }: TUserRegisterInfo) => {
     api
       .register({
         email: email,
@@ -74,9 +92,9 @@ const useAuth = () => {
         }
       })
       .catch((err) => alert(err));
-  }
+  };
 
-  function getUserData() {
+  const getUserData = () => {
     api
       .getUser()
       .then((res) => {
@@ -90,11 +108,11 @@ const useAuth = () => {
         dispatch(setUserIsAuth(false));
         console.log(err);
       });
-  }
+  };
 
-  function resetPassword(email) {
+  const resetPassword = ({ email }: TUserResetPassword) => {
     api
-      .resetPassword(email)
+      .resetPassword({ email })
       .then((res) => {
         if (res.success) {
           dispatch(resetRequestSent(true));
@@ -102,11 +120,14 @@ const useAuth = () => {
         }
       })
       .catch(console.error);
-  }
+  };
 
-  function confirmResetPassword(password, token) {
+  const confirmResetPassword = ({
+    password,
+    token,
+  }: TUserConfirmPasswordReset) => {
     api
-      .confirmPasswordReset(password, token)
+      .confirmPasswordReset({ password, token })
       .then((res) => {
         console.log(res);
         if (res.success) {
@@ -115,14 +136,14 @@ const useAuth = () => {
         }
       })
       .catch((err) => alert(err));
-  }
+  };
 
-  function authCheck() {
+  const authCheck = () => {
     if (getCookie("accessToken")) {
       dispatch(setUserIsAuth(true));
       navigate(-1);
     }
-  }
+  };
 
   return {
     handleLogout,

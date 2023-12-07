@@ -4,22 +4,29 @@ import {
   Counter,
   CurrencyIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import PropTypes from "prop-types";
-import { ingredientPropTypes } from "../../../../utils/types";
 import { useDrag } from "react-dnd";
 import { useDispatch, useSelector } from "react-redux";
 import { setCurrentIngredient } from "../../../../services/slices/ingredients.slice";
 import { modalTypes, openModal } from "../../../../services/slices/modal.slice";
 import { Link, useLocation } from "react-router-dom";
+import { TIngredientType } from "../../../../utils/types";
 
-const Ingredient = ({ ingredient }) => {
+interface IngredientProps {
+  ingredient: TIngredientType;
+}
+
+const Ingredient: React.FC<IngredientProps> = ({ ingredient }) => {
   const { image, name, price, _id } = ingredient;
   const dispatch = useDispatch();
-  const { constructorIngredients } = useSelector((state) => state.ingredients);
+  const { constructorIngredients } = useSelector(
+    (state: any) => state.ingredients
+  );
   const location = useLocation();
 
   const counter = useMemo(
-    () => constructorIngredients.filter((item) => item._id === _id).length,
+    () =>
+      constructorIngredients.filter((item: TIngredientType) => item._id === _id)
+        .length,
     [constructorIngredients, _id]
   );
 
@@ -67,10 +74,6 @@ const Ingredient = ({ ingredient }) => {
       </p>
     </Link>
   );
-};
-
-Ingredient.propTypes = {
-  ingredient: PropTypes.shape(ingredientPropTypes).isRequired,
 };
 
 export default Ingredient;

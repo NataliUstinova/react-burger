@@ -5,7 +5,7 @@ import BurgerConstructor from "../../components/burger-constructor/burger-constr
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 
-const Main = () => {
+const Main: React.FC = () => {
   return (
     <div className={mainStyles.container}>
       <Suspense fallback={<div>Loading...</div>}>

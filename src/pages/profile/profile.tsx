@@ -15,27 +15,28 @@ import { useDispatch, useSelector } from "react-redux";
 import Nav from "./nav/nav";
 import useAuth from "../../utils/auth";
 
-const Profile = () => {
+const Profile: React.FC = () => {
   const { getUserData } = useAuth();
   useEffect(() => {
     getUserData();
   }, []);
 
-  const [serverResponse, setServerResponse] = useState("");
-  const [editMode, setEditMode] = useState(false);
+  const [serverResponse, setServerResponse] = useState<string>("");
+  const [editMode, setEditMode] = useState<boolean>(false);
 
-  const passwordRef = useRef(null);
-  const emailRef = useRef(null);
-  const nameRef = useRef(null);
+  const passwordRef = useRef<HTMLInputElement>(null);
+  const emailRef = useRef<HTMLInputElement>(null);
+  const nameRef = useRef<HTMLInputElement>(null);
 
-  const { values, setValues, errors, handleInputChange } =
-    useValidation("form");
+  const { values, setValues, errors, handleInputChange } = useValidation({
+    formClass: "form",
+  });
 
   const {
     email: initialEmail,
     password: initialPassword,
     name: initialName,
-  } = useSelector((store) => store.user);
+  } = useSelector((store: any) => store.user);
 
   useEffect(() => {
     setValues({
@@ -47,7 +48,7 @@ const Profile = () => {
 
   const dispatch = useDispatch();
 
-  const handleEditClick = (ref) => {
+  const handleEditClick = (ref: React.RefObject<HTMLInputElement> | null) => {
     ref?.current?.focus();
     setEditMode(true);
   };
@@ -61,7 +62,7 @@ const Profile = () => {
     setEditMode(false);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     setServerResponse("");
     e.preventDefault();
     if (
@@ -101,64 +102,61 @@ const Profile = () => {
   return (
     <div className={profileStyles.container}>
       <Nav />
-      <form className={profileStyles.formContainer} onSubmit={handleSubmit}>
+      <form
+        className={profileStyles.formContainer}
+        onSubmit={(e) => handleSubmit(e)}
+      >
         <Input
           ref={nameRef}
           type="text"
           placeholder="Имя"
-          value={values.name || ""}
+          value={String(values.name) || ""}
           name="name"
           icon={"EditIcon"}
           error={!!errors.name}
-          errorText={errors.name}
+          errorText={String(errors.name)}
           size={"default"}
           extraClass="mb-6"
-          onFocus={handleEditClick}
+          onFocus={() => handleEditClick(nameRef)}
           onChange={(e) => handleInputChange(e)}
-          onIconClick={() => {
-            handleEditClick(nameRef);
-          }}
+          onIconClick={() => handleEditClick(nameRef)}
         />
         <Input
           type="email"
           ref={emailRef}
           placeholder={"Email"}
-          value={values.email || ""}
+          value={String(values.email) || ""}
           name="email"
           icon={"EditIcon"}
           error={!!errors.email}
-          errorText={errors.email}
+          errorText={String(errors.email)}
           size={"default"}
           extraClass="mb-6"
-          onFocus={handleEditClick}
+          onFocus={() => handleEditClick(emailRef)}
           onChange={(e) => handleInputChange(e)}
-          onIconClick={() => {
-            handleEditClick(emailRef);
-          }}
+          onIconClick={() => handleEditClick(emailRef)}
         />
         <Input
           type="password"
           ref={passwordRef}
           placeholder="Пароль"
-          value={values.password || ""}
+          value={String(values.password) || ""}
           name={"password"}
           error={!!errors.password}
-          errorText={errors.password}
+          errorText={String(errors.password)}
           size={"default"}
           extraClass="mb-6"
           onChange={(e) => handleInputChange(e)}
           icon={"EditIcon"}
-          onFocus={handleEditClick}
-          onIconClick={() => {
-            handleEditClick(passwordRef);
-          }}
+          onFocus={() => handleEditClick(passwordRef)}
+          onIconClick={() => handleEditClick(passwordRef)}
         />
         {editMode && (
           <div className={profileStyles.buttons}>
             <Button
               htmlType="button"
               type="secondary"
-              onClick={handleCancelClick}
+              onClick={() => handleCancelClick()}
             >
               Cancel
             </Button>

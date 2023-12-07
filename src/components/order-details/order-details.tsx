@@ -3,8 +3,9 @@ import orderDetailsStyles from "./order-details.module.css";
 import { Done } from "../../images";
 import { useSelector } from "react-redux";
 
-const OrderDetails = () => {
-  const order = useSelector((state) => state.order);
+const OrderDetails: React.FC = () => {
+  const order = useSelector((state: any) => state.order);
+
   return (
     <>
       <h2

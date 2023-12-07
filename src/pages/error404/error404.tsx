@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-const Error404 = () => {
+const Error404: React.FC = () => {
   return (
     <h1 className="text_color_primary text_type_main-default">
       Страница не найдена{" "}

@@ -8,7 +8,7 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import NavigationLink from "./components/nav-link/nav-link";
 
-const AppHeader = () => {
+const AppHeader: React.FC = () => {
   return (
     <header className={`${appHeaderStyles.container} m-10`}>
       <nav className={appHeaderStyles.navList}>

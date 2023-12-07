@@ -3,20 +3,26 @@ import ingredientDetailsStyles from "./ingredient-details.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { setCurrentIngredient } from "../../services/slices/ingredients.slice";
-const IngredientDetails = () => {
+import { TIngredientType } from "../../utils/types";
+
+interface IngredientDetailsProps {}
+
+const IngredientDetails: React.FC<IngredientDetailsProps> = () => {
   const { currentIngredient, ingredients } = useSelector(
-    (state) => state.ingredients
+    (state: any) => state.ingredients
   );
   const dispatch = useDispatch();
   const { image, name, carbohydrates, fat, proteins, calories } =
     currentIngredient;
 
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>();
 
   useEffect(() => {
     if (id && ingredients) {
       dispatch(
-        setCurrentIngredient(ingredients?.find((item) => item._id === id))
+        setCurrentIngredient(
+          ingredients?.find((item: TIngredientType) => item._id === id)
+        )
       );
     }
   }, [id, ingredients]);

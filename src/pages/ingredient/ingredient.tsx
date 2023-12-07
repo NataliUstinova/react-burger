@@ -4,18 +4,21 @@ import { useParams } from "react-router-dom";
 import IngredientDetails from "../../components/ingredient-details/ingredient-details";
 import { useDispatch, useSelector } from "react-redux";
 import { setCurrentIngredient } from "../../services/slices/ingredients.slice";
+import { TIngredientType } from "../../utils/types";
 
-const Ingredient = () => {
+const Ingredient: React.FC = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
   const { ingredients, currentIngredient } = useSelector(
-    (state) => state.ingredients
+    (state: any) => state.ingredients
   );
 
   useEffect(() => {
     if (ingredients?.length !== 0) {
       dispatch(
-        setCurrentIngredient(ingredients?.find((item) => item._id === id))
+        setCurrentIngredient(
+          ingredients?.find((item: TIngredientType) => item._id === id)
+        )
       );
     }
   }, [id, ingredients, dispatch]);

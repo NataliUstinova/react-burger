@@ -5,30 +5,39 @@ import IngredientsRowBlock from "./components/ingredient-row-block/ingredient-ro
 import { useDispatch, useSelector } from "react-redux";
 import { setCurrentTab } from "../../services/slices/tabs.slice";
 import { useInView } from "react-intersection-observer";
+import { TIngredientType } from "../../utils/types";
 
-const BurgerIngredients = () => {
+const BurgerIngredients: React.FC = () => {
   const dispatch = useDispatch();
-  const { currentTab } = useSelector((state) => state.tabs);
+  const { currentTab } = useSelector((state: any) => state.tabs);
 
-  const { ingredients, isLoading } = useSelector((state) => state.ingredients);
+  const { ingredients, isLoading } = useSelector(
+    (state: any) => state.ingredients
+  );
 
   const TABS = ["Булки", "Соусы", "Начинки"];
 
   const buns = useMemo(
-    () => ingredients && ingredients?.filter((item) => item.type === "bun"),
+    () =>
+      ingredients &&
+      ingredients?.filter((item: TIngredientType) => item.type === "bun"),
     [ingredients]
   );
   const sauces = useMemo(
-    () => ingredients && ingredients?.filter((item) => item.type === "sauce"),
+    () =>
+      ingredients &&
+      ingredients?.filter((item: TIngredientType) => item.type === "sauce"),
     [ingredients]
   );
   const mains = useMemo(
-    () => ingredients && ingredients?.filter((item) => item.type === "main"),
+    () =>
+      ingredients &&
+      ingredients?.filter((item: TIngredientType) => item.type === "main"),
     [ingredients]
   );
-  const bunsRef = useRef(null);
-  const saucesRef = useRef(null);
-  const mainsRef = useRef(null);
+  const bunsRef = useRef<HTMLDivElement>(null);
+  const saucesRef = useRef<HTMLDivElement>(null);
+  const mainsRef = useRef<HTMLDivElement>(null);
 
   const [bunsInView] = useInView({
     threshold: 0.5,
@@ -42,7 +51,8 @@ const BurgerIngredients = () => {
     threshold: 0.2,
     onChange: (inView) => inView && dispatch(setCurrentTab(TABS[2])),
   });
-  const handleTabClick = (tab) => {
+
+  const handleTabClick = (tab: string) => {
     dispatch(setCurrentTab(tab)); // Dispatch the setCurrentTab action instead of using local state
     switch (tab) {
       case "Булки":

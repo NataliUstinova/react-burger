@@ -8,18 +8,27 @@ import {
 import useValidation from "../../hooks/useValidation";
 import useAuth from "../../utils/auth";
 
-const Register = () => {
-  const { values, setValues, errors, handleInputChange, isDisabled } =
-    useValidation("form");
-
+const Register: React.FC = () => {
+  const { values, errors, handleInputChange, isDisabled } = useValidation({
+    formClass: "form",
+  });
+  const [showPassword, setShowPassword] = React.useState<boolean>(false);
   const { handleRegister } = useAuth();
-  function handleSubmit(e) {
+
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    handleRegister(values.email, values.password, values.name);
+    handleRegister({
+      email: values.email,
+      password: values.password,
+      name: values.name,
+    });
   }
 
   return (
-    <form className={`${styles.container} form`} onSubmit={handleSubmit}>
+    <form
+      className={`${styles.container} form`}
+      onSubmit={(e) => handleSubmit(e)}
+    >
       <h1 className="text text_type_main-medium">Регистрация</h1>
       <Input
         type="text"
@@ -44,17 +53,12 @@ const Register = () => {
         extraClass="mb-6"
       />
       <Input
-        type={values.showPassword ? "text" : "password"}
+        type={showPassword ? "text" : "password"}
         placeholder="Пароль"
         value={values.password || ""}
         onChange={(e) => handleInputChange(e)}
         icon={"ShowIcon"}
-        onIconClick={() => {
-          setValues((prevValues) => ({
-            ...prevValues,
-            showPassword: !prevValues.showPassword,
-          }));
-        }}
+        onIconClick={() => setShowPassword((prev) => !prev)}
         name={"password"}
         error={!!errors.password}
         errorText={errors.password}

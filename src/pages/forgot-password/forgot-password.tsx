@@ -8,14 +8,15 @@ import { Link } from "react-router-dom";
 import useValidation from "../../hooks/useValidation";
 import useAuth from "../../utils/auth";
 
-const ForgotPassword = () => {
-  const { values, errors, handleInputChange, isDisabled } =
-    useValidation("form");
+const ForgotPassword: React.FC = () => {
+  const { values, errors, handleInputChange, isDisabled } = useValidation({
+    formClass: "form",
+  });
   const { resetPassword } = useAuth();
 
-  function handleSubmit(e) {
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    resetPassword(values.email);
+    resetPassword({ email: values.email });
   }
 
   return (

@@ -17,25 +17,26 @@ import ConstructorElementWrapper from "./components/constructor-element-wrapper/
 import { v4 as uuid } from "uuid";
 import { useLocation, useNavigate } from "react-router-dom";
 import { setPreLoginLocation } from "../../services/slices/user.slice";
+import { TIngredientType } from "../../utils/types";
 
-const BurgerConstructor = () => {
+const BurgerConstructor: React.FC = () => {
   const dispatch = useDispatch();
   const { constructorIngredients, middleIngredients, totalPrice } = useSelector(
-    (state) => state.ingredients
+    (state: any) => state.ingredients
   );
   const location = useLocation();
-  const { isAuth } = useSelector((state) => state.user);
+  const { isAuth } = useSelector((state: any) => state.user);
   const navigate = useNavigate();
   const buns = constructorIngredients?.filter(
-    (ingredient) => ingredient.type === "bun"
+    (ingredient: TIngredientType) => ingredient.type === "bun"
   );
-  const { loading } = useSelector((state) => state.order);
+  const { loading } = useSelector((state: any) => state.order);
   const [{ isHover }, dropTargetRef] = useDrop({
     accept: "ingredient",
     collect: (monitor) => ({
       isHover: monitor.isOver(),
     }),
-    drop: (item) => {
+    drop: (item: TIngredientType) => {
       dispatch(setConstructorIngredients({ ...item, uniqueId: uuid() }));
     },
   });
@@ -47,13 +48,14 @@ const BurgerConstructor = () => {
       return;
     }
 
-    const ingredientIds = constructorIngredients.map(
-      (ingredient) => ingredient._id
+    const ingredientIds: string[] = constructorIngredients.map(
+      (ingredient: TIngredientType) => ingredient._id
     );
 
+    // @ts-ignore
     dispatch(postOrder(ingredientIds))
       .unwrap()
-      .then((res) => {
+      .then((res: { number: string }) => {
         navigate(`profile/orders/${res.number}`, {
           state: { background: location },
         });
@@ -62,7 +64,7 @@ const BurgerConstructor = () => {
         dispatch(openModal({ modalType: modalTypes.ORDER }));
       })
       .then(() => dispatch(resetConstructorIngredients()))
-      .catch((error) => console.error("Order post failed:", error));
+      .catch((error: {}) => console.error("Order post failed:", error));
   };
 
   return (
@@ -104,13 +106,15 @@ const BurgerConstructor = () => {
                   : ""
               }`}
             >
-              {middleIngredients.map((ingredient, index) => (
-                <ConstructorElementWrapper
-                  key={ingredient.uniqueId}
-                  item={ingredient}
-                  index={index}
-                />
-              ))}
+              {middleIngredients.map(
+                (ingredient: TIngredientType, index: number) => (
+                  <ConstructorElementWrapper
+                    key={ingredient.uniqueId}
+                    item={ingredient}
+                    index={index}
+                  />
+                )
+              )}
             </ul>
 
             {buns[0] && (

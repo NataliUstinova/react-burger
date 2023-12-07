@@ -8,14 +8,17 @@ import {
 import useValidation from "../../hooks/useValidation";
 import useAuth from "../../utils/auth";
 
-const Login = () => {
-  const { values, setValues, errors, handleInputChange, isDisabled } =
-    useValidation("form");
+const Login: React.FC = () => {
+  const [showPassword, setShowPassword] = React.useState<boolean>(false);
+
+  const { values, errors, handleInputChange, isDisabled } = useValidation({
+    formClass: "form",
+  });
   const { handleLogin } = useAuth();
 
-  function handleSubmit(e) {
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    handleLogin(values.email, values.password);
+    handleLogin({ email: values.email, password: values.password });
   }
 
   return (
@@ -33,17 +36,12 @@ const Login = () => {
         extraClass="mt-6 mb-6"
       />
       <Input
-        type={values.showPassword ? "text" : "password"}
+        type={showPassword ? "text" : "password"}
         placeholder="Пароль"
         value={values.password || ""}
         onChange={(e) => handleInputChange(e)}
         icon={"ShowIcon"}
-        onIconClick={() => {
-          setValues((prevValues) => ({
-            ...prevValues,
-            showPassword: !prevValues.showPassword,
-          }));
-        }}
+        onIconClick={() => setShowPassword((prev) => !prev)}
         name={"password"}
         error={!!errors.password}
         errorText={errors.password}

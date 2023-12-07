@@ -9,15 +9,20 @@ import useValidation from "../../hooks/useValidation";
 import useAuth from "../../utils/auth";
 import { useSelector } from "react-redux";
 
-const ResetPassword = () => {
-  const { values, setValues, errors, handleInputChange, isDisabled } =
-    useValidation("form");
+const ResetPassword: React.FC = () => {
+  const [showPassword, setShowPassword] = React.useState<boolean>(false);
+  const { values, errors, handleInputChange, isDisabled } = useValidation({
+    formClass: "form",
+  });
   const { confirmResetPassword } = useAuth();
-  const { resetRequestSent } = useSelector((store) => store.user);
+  const { resetRequestSent } = useSelector((store: any) => store.user);
   const navigate = useNavigate();
-  function handleSubmit(e) {
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    confirmResetPassword(values.password, values.token.trim());
+    confirmResetPassword({
+      password: values.password,
+      token: values.token.trim(),
+    });
   }
 
   useEffect(() => {
@@ -28,20 +33,15 @@ const ResetPassword = () => {
     <form className={`${styles.container} form`} onSubmit={handleSubmit}>
       <h1 className="text text_type_main-medium">Восстановление пароля</h1>
       <Input
-        type={values.showPassword ? "text" : "password"}
+        type={showPassword ? "text" : "password"}
         placeholder="Введите новый пароль"
         value={values.password || ""}
         onChange={(e) => handleInputChange(e)}
         icon={"ShowIcon"}
-        onIconClick={() => {
-          setValues((prevValues) => ({
-            ...prevValues,
-            showPassword: !prevValues.showPassword,
-          }));
-        }}
+        onIconClick={() => setShowPassword((prev) => !prev)}
         name={"password"}
         error={!!errors.password}
-        errorText={errors.password}
+        errorText={String(errors.password)}
         size={"default"}
         extraClass="mt-6 mb-6"
       />
