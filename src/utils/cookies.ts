@@ -12,7 +12,11 @@ export function getCookie(name: string): string | undefined {
 export function setCookie(
   name: string,
   value: string | number | boolean,
-  props?: any
+  props?: {
+    path?: string;
+    expires?: Date | string | number;
+    [propName: string]: any;
+  }
 ): void {
   props = props || {};
   let exp = props.expires;
@@ -21,8 +25,9 @@ export function setCookie(
     d.setTime(d.getTime() + exp * 1000);
     exp = props.expires = d;
   }
-  if (exp && exp.toUTCString) {
-    props.expires = exp.toUTCString();
+  if (exp) {
+    const date: Date = new Date(exp)
+    props.expires = date.toUTCString();
   }
   value = encodeURIComponent(value);
   let updatedCookie = name + "=" + value;
